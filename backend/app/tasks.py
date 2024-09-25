@@ -3,7 +3,7 @@ from celery import shared_task
 from .models import Dump, Device, DeviceUser
 from elasticsearch import Elasticsearch
 
-es = Elasticsearch(['elasticsearch:9200'])
+es = Elasticsearch(['http://elasticsearch:9200'])
 
 @shared_task
 def process_disk_dump(dump_id):

@@ -4,7 +4,7 @@ from django.db import models
 # Модель для "Кейса"
 class Case(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=600)
     description = models.TextField()
 
     def __str__(self):
@@ -20,7 +20,7 @@ class Dump(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     case = models.ForeignKey(Case, related_name='dumps', on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=600)
     upload_time = models.DateTimeField(auto_now_add=True)
     dump_type = models.CharField(max_length=50, choices=DUMP_TYPE_CHOICES)
 
@@ -31,7 +31,7 @@ class Dump(models.Model):
 class Device(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     dump = models.ForeignKey(Dump, related_name='devices', on_delete=models.CASCADE)
-    host = models.CharField(max_length=255)
+    host = models.CharField(max_length=600)
 
     def __str__(self):
         return self.host
@@ -40,7 +40,7 @@ class Device(models.Model):
 class DeviceUser(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     device = models.ForeignKey(Device, related_name='users', on_delete=models.CASCADE)
-    username = models.CharField(max_length=255)
+    username = models.CharField(max_length=600)
 
     def __str__(self):
         return self.username
@@ -61,9 +61,9 @@ class CyberAttack(models.Model):
     device = models.ForeignKey(Device, related_name='cyberattacks', on_delete=models.CASCADE)
     users = models.ManyToManyField(DeviceUser, related_name='cyberattacks')
     date = models.DateField()
-    attacker = models.CharField(max_length=255, blank=True, null=True)
-    victim = models.CharField(max_length=255)
-    attack_type = models.CharField(max_length=255)
+    attacker = models.CharField(max_length=600, blank=True, null=True)
+    victim = models.CharField(max_length=600)
+    attack_type = models.CharField(max_length=600)
     success = models.BooleanField(default=False)
     justification = models.TextField()
     killchain_phase = models.CharField(max_length=50, choices=KILLCHAIN_PHASES)
@@ -74,9 +74,9 @@ class CyberAttack(models.Model):
 # Модель для "Индикатора компрометации"
 class CompromiseIndicator(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    elastic_id = models.CharField(max_length=255)
+    elastic_id = models.CharField(max_length=600)
     description = models.TextField()
-    mitre_tags = models.JSONField(default=dict)
+    mitre_tags = models.CharField(max_length=600)
 
     def __str__(self):
         return self.elastic_id

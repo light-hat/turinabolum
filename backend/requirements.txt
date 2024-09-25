@@ -7,3 +7,4 @@ redis
 elasticsearch
 psycopg2-binary
 django-elasticsearch-dsl
+gunicorn
