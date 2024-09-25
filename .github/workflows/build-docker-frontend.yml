@@ -13,6 +13,6 @@ jobs:
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
     - name: Build the Docker image
-      run: docker build ./frontend/ --file Dockerfile --tag looking_glass_frontend:${{ env.VERSION }}
+      run: docker build ./frontend/ --tag looking_glass_frontend:${{ env.VERSION }}
     - name: Push the Docker image
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/looking_glass_frontend:${{ env.VERSION }}
