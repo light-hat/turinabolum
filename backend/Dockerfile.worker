@@ -1,0 +1,33 @@
+# backend/Dockerfile.worker
+FROM python:3.8-slim
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    libsqlite3-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    liblzma-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libz-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libfuse-dev \
+    pkg-config \
+    git \
+    && apt-get clean
+
+WORKDIR /app
+
+# Устанавливаем зависимости, включая Plaso
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+RUN pip install plaso
+
+COPY . .
+
+# Запускаем Celery
+CMD ["celery", "-A", "backend.celery", "worker", "--loglevel=info"]
