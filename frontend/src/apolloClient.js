@@ -4,11 +4,11 @@ import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
 const httpLink = new HttpLink({
-    uri: 'http://localhost/graphql',  // Адрес GraphQL сервера
+    uri: 'http://backend:8000/graphql',  // Адрес GraphQL сервера
 });
 
 const wsLink = new GraphQLWsLink(createClient({
-    url: 'ws://localhost/ws/',  // WebSocket для подписок
+    url: 'ws://backend:8000/ws/',  // WebSocket для подписок
 }));
 
 const splitLink = split(

@@ -11,6 +11,7 @@ services:
     restart: always
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/app/static
     depends_on:
       - frontend
       - backend
@@ -51,9 +52,13 @@ services:
     image: looking-glass/backend
     command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - ./backend:/app
-    expose:
-      - 8000
+      #- ./backend:/app
+      - static_volume:/home/app/web/static
+      #- ./disk_images:/app/disk_images
+    #expose:
+    #  - 8000
+    ports:
+      - "8000:8000"
     restart: always
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings
@@ -70,7 +75,8 @@ services:
     image: looking-glass/celery
     command: celery -A core.celery worker --loglevel=info
     volumes:
-      - ./backend:/app
+      #- ./backend:/app
+      - static_volume:/home/app/web/static
     restart: always
     depends_on:
       - redis
@@ -95,3 +101,6 @@ services:
     expose:
       - 9200
     restart: always
+
+volumes:
+  static_volume:

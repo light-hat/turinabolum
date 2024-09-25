@@ -4,9 +4,7 @@ from django.urls import path
 from app.consumers import MyGraphQLConsumer
 
 application = ProtocolTypeRouter({
-    "websocket": AuthMiddlewareStack(
-        URLRouter([
-            path("ws/graphql/", MyGraphQLConsumer.as_asgi()),
-        ])
-    ),
+    "websocket": URLRouter([
+        path('ws/graphql/', MyGraphQLConsumer.as_asgi()),
+    ]),
 })
