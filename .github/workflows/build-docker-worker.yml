@@ -17,4 +17,6 @@ jobs:
         docker build ./backend/ --tag l1ghth4t/looking_glass_worker:${{ env.VERSION }}
         docker tag l1ghth4t/looking_glass_worker:${{ env.VERSION }} l1ghth4t/looking_glass_worker:latest
     - name: Push the Docker image
-      run: docker push l1ghth4t/looking_glass_worker:${{ env.VERSION }}
+      run: |
+        docker push l1ghth4t/looking_glass_worker:${{ env.VERSION }}
+        docker push l1ghth4t/looking_glass_worker:latest
