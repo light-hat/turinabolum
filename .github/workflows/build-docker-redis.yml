@@ -15,4 +15,4 @@ jobs:
     - name: Build the Docker image
       run: docker build ./redis/ --tag looking_glass_redis:${{ env.VERSION }}
     - name: Push the Docker image
-      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/looking_glass_redis:${{ env.VERSION }}
+      run: docker push l1ghth4t/looking_glass_redis:${{ env.VERSION }}
