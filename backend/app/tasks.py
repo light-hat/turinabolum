@@ -1,15 +1,41 @@
+import os.path
 import subprocess
+import tempfile
 from celery import shared_task
-from .models import Dump, Device, DeviceUser
+from app.models import *
 from elasticsearch import Elasticsearch
 
 es = Elasticsearch(['http://elasticsearch:9200'])
 
+
 @shared_task
 def process_disk_dump(dump_id):
     dump = Dump.objects.get(id=dump_id)
+    case = Case.objects.get(id=dump.case)
 
-    # Параметры для вызова log2timeline
+    try:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            print(f"[*] Work in tmp dir {tmpdir}")
+            event = {
+                "date": "26.03.2002",
+                "time": "20:00",
+                "timezone": "UTC+3",
+                "source": "1123123",
+            }
+
+            if os.path.isfile(dump.filename):
+                print("FIIILEEE FOOOUUND!")
+            else:
+                print("DUMP NOT FOUND!!!!!!111")
+
+           #es.index(index=case.name, body=event)
+
+    except Exception as e:
+        print(str(e))
+        dump.status = 'error'
+        dump.save()
+
+    '''# Параметры для вызова log2timeline
     log2timeline_cmd = [
         'log2timeline',
         '--storage-file', 'my_storage_file.plaso',
@@ -51,10 +77,10 @@ def process_disk_dump(dump_id):
                 "inode": fields[13],
                 "notes": fields[14],
                 "format": fields[15],
-                "extra": fields[16]
+                "extra": fields[16],
             }
             es.index(index='plaso_events', body=event)
 
             # Создаем устройство и пользователя на основе данных
             Device.objects.get_or_create(dump=dump, host=event['host'])
-            DeviceUser.objects.get_or_create(device=device, username=event['user'])
+            DeviceUser.objects.get_or_create(device=device, username=event['user'])'''

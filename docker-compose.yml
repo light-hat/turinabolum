@@ -52,7 +52,7 @@ services:
     image: looking_glass_backend:latest
     volumes:
       - static_volume:/app/static
-      - "D:/Repos/PoPrikolu/LookingGlass:/app/disk_images" # Монтирование папки с дампами
+      #- "D:/Repos/PoPrikolu/LookingGlass:/app/disk_images" # Монтирование папки с дампами
     #expose:
     #  - 8000
     ports:
@@ -81,7 +81,7 @@ services:
     command: celery -A core.celery worker --loglevel=info
     volumes:
       - static_volume:/app/static
-      - "D:/Repos/PoPrikolu/LookingGlass:/app/disk_images" # Монтирование папки с дампами
+      #- "D:/Repos/PoPrikolu/LookingGlass:/app/disk_images" # Монтирование папки с дампами
     restart: always
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings
@@ -133,10 +133,10 @@ services:
       retries: 5
 
   elasticsearch:
-    build:
-      context: ./elasticsearch
+    #build:
+    #  context: ./elasticsearch
     container_name: looking-glass_elasticsearch
-    image: looking_glass_elasticsearch:latest
+    image: l1ghth4t/looking_glass_elasticsearch:latest
     environment:
       - discovery.type=single-node
     expose:

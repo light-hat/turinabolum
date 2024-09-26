@@ -1,7 +1,7 @@
 import graphene
 from graphene_django.types import DjangoObjectType
 from app.models import *
-
+from app.tasks import process_disk_dump
 
 class CaseType(DjangoObjectType):
     class Meta:
@@ -32,23 +32,31 @@ class CompromiseIndicatorType(DjangoObjectType):
     class Meta:
         model = CompromiseIndicator
 
+# Mutations (and mutants)
 
 class CreateDumpMutation(graphene.Mutation):
     class Arguments:
-        name = graphene.String(required=True)
-        description = graphene.String(required=True)
+        case = graphene.String(required=True)
+        filename = graphene.String(required=True)
+        dump_type = graphene.String(required=True)
 
     dump = graphene.Field(DumpType)
-
-    def mutate(self, info, name, description):
-        dump = Dump.objects.create(name=name, description=description)
-        # Запускаем Celery задачу
-        #process_task.delay(dump.id)
+    
+    def mutate(self, info, case, filename, dump_type):
+        case_obj = Case.objects.get(id=case)
+        dump = Dump.objects.create(
+            case=case_obj,
+            filename=filename,
+            dump_type=dump_type,
+            status='processing'
+        )
+        process_disk_dump.delay(dump.id)
         return CreateDumpMutation(dump=dump)
 
+# END Mutations
 
 class Query(graphene.ObjectType):
-    dump = graphene.Field(DumpType, id=graphene.Int(required=True))
+    dump = graphene.Field(DumpType, id=graphene.String(required=True))
     dumps = graphene.List(DumpType)
 
     def resolve_dump(self, info, id):
