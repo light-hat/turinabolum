@@ -15,4 +15,6 @@ jobs:
     - name: Build the Docker image
       run: docker build ./elasticsearch/ --tag l1ghth4t/looking_glass_elasticsearch:${{ env.VERSION }}
     - name: Push the Docker image
-      run: docker push l1ghth4t/looking_glass_elasticsearch:${{ env.VERSION }}
+      run: |
+        docker push l1ghth4t/looking_glass_elasticsearch:${{ env.VERSION }}
+        docker push l1ghth4t/looking_glass_elasticsearch:latest
