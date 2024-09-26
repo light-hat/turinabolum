@@ -1,13 +1,20 @@
 # backend/Dockerfile.django
 FROM python:3.8-slim
 
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    netcat-traditional \
+    curl
+
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN python manage.py collectstatic
+RUN chmod +x entrypoint.sh
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]

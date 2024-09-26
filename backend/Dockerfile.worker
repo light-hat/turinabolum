@@ -18,16 +18,17 @@ RUN apt-get update && apt-get install -y \
     libfuse-dev \
     pkg-config \
     git \
+    netcat-traditional \
     && apt-get clean
 
 WORKDIR /app
 
-# Устанавливаем зависимости, включая Plaso
 COPY requirements.txt .
-RUN pip install -r requirements.txt
-RUN pip install plaso
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+#RUN pip install plaso # Очень тяжелая хрень
 
 COPY . .
 
-# Запускаем Celery
 CMD ["celery", "-A", "backend.celery", "worker", "--loglevel=info"]

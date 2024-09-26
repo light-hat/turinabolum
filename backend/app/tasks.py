@@ -56,5 +56,5 @@ def process_disk_dump(dump_id):
             es.index(index='plaso_events', body=event)
 
             # Создаем устройство и пользователя на основе данных
-            device, created = Device.objects.get_or_create(dump=dump, host=event['host'])
+            Device.objects.get_or_create(dump=dump, host=event['host'])
             DeviceUser.objects.get_or_create(device=device, username=event['user'])
