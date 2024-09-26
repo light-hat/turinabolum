@@ -1,0 +1,118 @@
+name: Build & deploy reverse-proxy
+on:
+  push:
+    tags:
+      - '[0-9]+\.[0-9]+\.[0-9]+'
+jobs:
+  nginx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version from file
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Build the Docker image
+        run: |
+          docker build ./nginx/ --tag l1ghth4t/looking_glass_nginx:${{ env.VERSION }}
+          docker tag l1ghth4t/looking_glass_nginx:${{ env.VERSION }} l1ghth4t/looking_glass_nginx:latest
+      - name: Push the Docker image
+        run: |
+          docker push l1ghth4t/looking_glass_nginx:${{ env.VERSION }}
+          docker push l1ghth4t/looking_glass_nginx:latest
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version from file
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Build the Docker image
+        run: |
+          docker build ./frontend/ --tag l1ghth4t/looking_glass_frontend:${{ env.VERSION }}
+          docker tag l1ghth4t/looking_glass_frontend:${{ env.VERSION }} l1ghth4t/looking_glass_frontend:latest
+      - name: Push the Docker image
+        run: |
+          docker push l1ghth4t/looking_glass_frontend:${{ env.VERSION }}
+          docker push l1ghth4t/looking_glass_frontend:latest
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version from file
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Build the Docker image
+        run: |
+          docker build ./backend/ --tag l1ghth4t/looking_glass_backend:${{ env.VERSION }}
+          docker tag l1ghth4t/looking_glass_backend:${{ env.VERSION }} l1ghth4t/looking_glass_backend:latest
+      - name: Push the Docker image
+        run: |
+          docker push l1ghth4t/looking_glass_backend:${{ env.VERSION }}
+          docker push l1ghth4t/looking_glass_backend:latest
+  worker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version from file
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Build the Docker image
+        run: |
+          docker build ./backend/ -f ./backend/Dockerfile.worker --tag l1ghth4t/looking_glass_worker:${{ env.VERSION }}
+          docker tag l1ghth4t/looking_glass_worker:${{ env.VERSION }} l1ghth4t/looking_glass_worker:latest
+      - name: Push the Docker image
+        run: |
+          docker push l1ghth4t/looking_glass_worker:${{ env.VERSION }}
+          docker push l1ghth4t/looking_glass_worker:latest
+  postgres:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version from file
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Build the Docker image
+        run: |
+          docker build ./postgres/ --tag l1ghth4t/looking_glass_postgres:${{ env.VERSION }}
+          docker tag l1ghth4t/looking_glass_postgres:${{ env.VERSION }} l1ghth4t/looking_glass_postgres:latest
+      - name: Push the Docker image
+        run: |
+          docker push l1ghth4t/looking_glass_postgres:${{ env.VERSION }}
+          docker push l1ghth4t/looking_glass_postgres:latest
+  elastic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version from file
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Build the Docker image
+        run: |
+          docker build ./elasticsearch/ --tag l1ghth4t/looking_glass_elasticsearch:${{ env.VERSION }}
+          docker tag l1ghth4t/looking_glass_elasticsearch:${{ env.VERSION }} l1ghth4t/looking_glass_elasticsearch:latest
+      - name: Push the Docker image
+        run: |
+          docker push l1ghth4t/looking_glass_elasticsearch:${{ env.VERSION }}
+          docker push l1ghth4t/looking_glass_elasticsearch:latest
+  redis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read version from file
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Build the Docker image
+        run: |
+          docker build ./redis/ --tag l1ghth4t/looking_glass_redis:${{ env.VERSION }}
+          docker tag l1ghth4t/looking_glass_redis:${{ env.VERSION }} l1ghth4t/looking_glass_redis:latest
+      - name: Push the Docker image
+        run: |
+          docker push l1ghth4t/looking_glass_redis:${{ env.VERSION }}
+          docker push l1ghth4t/looking_glass_redis:latest
