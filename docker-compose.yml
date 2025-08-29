@@ -9,15 +9,18 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_SERVERS: zoo1:2888:3888
+    restart: always
+    networks:
+      - turinabol_net
 
   kafka1:
     image: confluentinc/cp-kafka:7.8.0
     hostname: kafka1
     container_name: kafka1
-    ports:
-      - "9092:9092"
-      - "29092:29092"
-      - "9999:9999"
+    expose:
+      - "9092"
+      - "29092"
+      - "9999"
     environment:
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:19092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092,DOCKER://host.docker.internal:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
@@ -34,3 +37,79 @@ services:
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
     depends_on:
       - zoo1
+    restart: always
+    networks:
+      - turinabol_net
+
+  minio:
+    image: minio/minio
+    container_name: minio_server
+    expose:
+      - "9000"
+      - "9001"
+    volumes:
+      - minio-data:/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_DEFAULT_BUCKETS: mybucket
+    command: server /data --console-address ":9001"
+    restart: always
+    networks:
+      - turinabol_net
+
+  db:
+    image: postgres:17-alpine
+    container_name: postgresql
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+    restart: always
+    networks:
+      - turinabol_net
+
+  redis:
+    image: redis:7.0.15
+    container_name: redis
+    expose:
+      - 6379
+    volumes:
+      - redis_data:/data
+    restart: always
+    networks:
+      - turinabol_net
+
+  gateway:
+    build:
+      context: gateway_api
+      dockerfile: Dockerfile
+    image: turinabolum:latest
+    container_name: turinabolum
+    ports:
+      - "8000:8000"
+    depends_on:
+      - kafka
+      - minio
+      - db
+      - redis
+    restart: always
+    networks:
+      - turinabol_net
+
+volumes:
+  redis_data:
+  postgres_data:
+  minio-data:
+
+networks:
+  turinabol_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.24.0.0/16"
