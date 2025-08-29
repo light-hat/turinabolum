@@ -15,6 +15,7 @@ class Command(BaseCommand):
     User initialization manage.py command.
     how to use: python3 manage.py initdb
     """
+
     def handle(self, *args, **options):
         """Запуск действий команды."""
 
