@@ -1,14 +1,14 @@
 """
-GraphQL interface application.
+Core of Gateway API.
 """
 
 from django.apps import AppConfig
 
 
-class GraphqlConfig(AppConfig):
+class CoreConfig(AppConfig):
     """
-    GraphQL interface application.
+    Core of Gateway API.
     """
 
     default_auto_field = "django.db.models.BigAutoField"
-    name = "graphql"
+    name = "core"

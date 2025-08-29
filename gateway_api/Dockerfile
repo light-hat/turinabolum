@@ -8,8 +8,18 @@ COPY requirements.txt /app/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY entrypoint.sh .
+
+RUN chmod +x entrypoint.sh
+
 COPY . /app/
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "your_project_name.wsgi:application"]
+RUN groupadd -g 1000 turinabolum && useradd -u 1000 -g turinabolum -m turinabolum
+
+RUN chown -R turinabolum:turinabolum /home/app/web
+
+USER turinabolum
+
+ENTRYPOINT ["sh", "./entrypoint.sh"]
