@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from .artifact import Artifact
@@ -57,7 +58,7 @@ class CorrelationResult(models.Model):
     )
     confidence = models.FloatField(
         default=0.0,
-        validators=[models.MinValueValidator(0.0), models.MaxValueValidator(1.0)],
+        validators=[MinValueValidator(0.0), MaxValueValidator(1.0)],
         verbose_name="Достоверность",
         help_text="Уровень достоверности корреляции от 0.0 до 1.0",
     )
