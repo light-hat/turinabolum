@@ -44,6 +44,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 
 class IncidentViewSet(viewsets.ModelViewSet):
@@ -58,6 +59,7 @@ class IncidentViewSet(viewsets.ModelViewSet):
     search_fields = ["title", "description"]
     ordering_fields = ["created_date", "modified_date", "severity"]
     ordering = ["-created_date"]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=["get"])
     def cases(self, request, pk=None):
@@ -79,6 +81,7 @@ class CaseViewSet(viewsets.ModelViewSet):
     search_fields = ["title", "description"]
     ordering_fields = ["created_date", "modified_date"]
     ordering = ["-created_date"]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=["get"])
     def evidence_sources(self, request, pk=None):
@@ -102,6 +105,7 @@ class EvidenceSourceViewSet(viewsets.ModelViewSet):
     search_fields = ["name", "description"]
     ordering_fields = ["acquisition_date", "created_date"]
     ordering = ["-acquisition_date"]
+    permission_classes = [IsAuthenticated]
 
 
 class ArtifactViewSet(viewsets.ModelViewSet):
@@ -116,6 +120,7 @@ class ArtifactViewSet(viewsets.ModelViewSet):
     search_fields = ["name", "path"]
     ordering_fields = ["created_date", "modified_date", "size"]
     ordering = ["-created_date"]
+    permission_classes = [IsAuthenticated]
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -123,6 +128,7 @@ class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
+    permission_classes = [IsAuthenticated]
 
 
 class ArtifactTagViewSet(viewsets.ModelViewSet):
@@ -130,6 +136,7 @@ class ArtifactTagViewSet(viewsets.ModelViewSet):
     serializer_class = ArtifactTagSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["artifact", "tag"]
+    permission_classes = [IsAuthenticated]
 
 
 class IOCViewSet(viewsets.ModelViewSet):
@@ -144,6 +151,7 @@ class IOCViewSet(viewsets.ModelViewSet):
     search_fields = ["value", "description"]
     ordering_fields = ["created_date", "first_seen", "last_seen"]
     ordering = ["-created_date"]
+    permission_classes = [IsAuthenticated]
 
 
 class TTPViewSet(viewsets.ModelViewSet):
@@ -152,6 +160,7 @@ class TTPViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["tactic"]
     search_fields = ["technique_id", "name"]
+    permission_classes = [IsAuthenticated]
 
 
 class CaseTTPViewSet(viewsets.ModelViewSet):
@@ -159,6 +168,7 @@ class CaseTTPViewSet(viewsets.ModelViewSet):
     serializer_class = CaseTTPSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["case", "ttp"]
+    permission_classes = [IsAuthenticated]
 
 
 class ThreatActorViewSet(viewsets.ModelViewSet):
@@ -167,6 +177,7 @@ class ThreatActorViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["origin"]
     search_fields = ["name", "aliases", "description"]
+    permission_classes = [IsAuthenticated]
 
 
 class IncidentThreatActorViewSet(viewsets.ModelViewSet):
@@ -174,6 +185,7 @@ class IncidentThreatActorViewSet(viewsets.ModelViewSet):
     serializer_class = IncidentThreatActorSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["incident", "threat_actor"]
+    permission_classes = [IsAuthenticated]
 
 
 class MalwareViewSet(viewsets.ModelViewSet):
@@ -182,6 +194,7 @@ class MalwareViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["type"]
     search_fields = ["name", "aliases", "description"]
+    permission_classes = [IsAuthenticated]
 
 
 class IncidentMalwareViewSet(viewsets.ModelViewSet):
@@ -189,6 +202,7 @@ class IncidentMalwareViewSet(viewsets.ModelViewSet):
     serializer_class = IncidentMalwareSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["incident", "malware"]
+    permission_classes = [IsAuthenticated]
 
 
 class DumpUploadViewSet(viewsets.ModelViewSet):
@@ -198,6 +212,7 @@ class DumpUploadViewSet(viewsets.ModelViewSet):
     filterset_fields = ["dump_type", "status"]
     ordering_fields = ["upload_date"]
     ordering = ["-upload_date"]
+    permission_classes = [IsAuthenticated]
 
 
 class ThreatIntelFeedViewSet(viewsets.ModelViewSet):
@@ -206,6 +221,7 @@ class ThreatIntelFeedViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["feed_type", "status"]
     search_fields = ["name", "description"]
+    permission_classes = [IsAuthenticated]
 
 
 class ThreatIntelIOCViewSet(viewsets.ModelViewSet):
@@ -220,6 +236,7 @@ class ThreatIntelIOCViewSet(viewsets.ModelViewSet):
     search_fields = ["value", "description"]
     ordering_fields = ["created_date", "first_seen", "last_seen"]
     ordering = ["-created_date"]
+    permission_classes = [IsAuthenticated]
 
 
 class CorrelationResultViewSet(viewsets.ModelViewSet):
@@ -229,6 +246,7 @@ class CorrelationResultViewSet(viewsets.ModelViewSet):
     filterset_fields = ["correlation_type", "severity", "is_false_positive"]
     ordering_fields = ["detected_date"]
     ordering = ["-detected_date"]
+    permission_classes = [IsAuthenticated]
 
 
 class NotificationViewSet(viewsets.ModelViewSet):
@@ -238,6 +256,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
     filterset_fields = ["notification_type", "severity", "is_read"]
     ordering_fields = ["created_date"]
     ordering = ["-created_date"]
+    permission_classes = [IsAuthenticated]
 
 
 class UserNotificationViewSet(viewsets.ModelViewSet):
@@ -245,3 +264,4 @@ class UserNotificationViewSet(viewsets.ModelViewSet):
     serializer_class = UserNotificationSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["user", "is_read"]
+    permission_classes = [IsAuthenticated]
