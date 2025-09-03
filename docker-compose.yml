@@ -92,8 +92,19 @@ services:
     container_name: turinabolum
     ports:
       - "8000:8000"
+    environment:
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET_NAME=mybucket
+      - MINIO_ENDPOINT_URL=http://minio:9000
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DJANGO_ENV=settings
     depends_on:
-      - kafka
+      - kafka1
       - minio
       - db
       - redis

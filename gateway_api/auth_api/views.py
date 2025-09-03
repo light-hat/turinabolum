@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.utils import timezone
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.types import OpenApiTypes
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -15,6 +17,92 @@ from rest_framework_simplejwt.tokens import RefreshToken
 logger = logging.getLogger(__name__)
 
 
+@extend_schema(
+    operation_id="jwt_create",
+    summary="Create JWT Token",
+    description="Authenticate user and create JWT access and refresh tokens. The refresh token is set as an HttpOnly cookie.",
+    request={
+        "application/json": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "description": "User's username",
+                    "example": "admin"
+                },
+                "password": {
+                    "type": "string",
+                    "description": "User's password",
+                    "example": "password123"
+                }
+            },
+            "required": ["username", "password"]
+        }
+    },
+    responses={
+        200: {
+            "description": "Authentication successful",
+            "content": {
+                "application/json": {
+                    "type": "object",
+                    "properties": {
+                        "success": {"type": "boolean", "example": True},
+                        "access": {"type": "string", "description": "JWT access token"},
+                        "user": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "integer"},
+                                "username": {"type": "string"},
+                                "email": {"type": "string"},
+                                "first_name": {"type": "string"},
+                                "last_name": {"type": "string"},
+                                "date_joined": {"type": "string", "format": "date-time"},
+                                "last_login": {"type": "string", "format": "date-time"}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        400: {
+            "description": "Bad request - missing credentials",
+            "content": {
+                "application/json": {
+                    "type": "object",
+                    "properties": {
+                        "success": {"type": "boolean", "example": False},
+                        "error": {"type": "string", "example": "Username and password are required"}
+                    }
+                }
+            }
+        },
+        401: {
+            "description": "Unauthorized - invalid credentials",
+            "content": {
+                "application/json": {
+                    "type": "object",
+                    "properties": {
+                        "success": {"type": "boolean", "example": False},
+                        "error": {"type": "string", "example": "Invalid credentials"}
+                    }
+                }
+            }
+        },
+        500: {
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "type": "object",
+                    "properties": {
+                        "success": {"type": "boolean", "example": False},
+                        "error": {"type": "string", "example": "An unexpected error occurred during login"}
+                    }
+                }
+            }
+        }
+    },
+    tags=["Authentication"]
+)
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def jwt_create(request):
@@ -84,6 +172,50 @@ def jwt_create(request):
         )
 
 
+@extend_schema(
+    operation_id="jwt_refresh",
+    summary="Refresh JWT Token",
+    description="Refresh JWT access token using the refresh token from HttpOnly cookie.",
+    responses={
+        200: {
+            "description": "Token refresh successful",
+            "content": {
+                "application/json": {
+                    "type": "object",
+                    "properties": {
+                        "success": {"type": "boolean", "example": True},
+                        "access": {"type": "string", "description": "New JWT access token"}
+                    }
+                }
+            }
+        },
+        401: {
+            "description": "Unauthorized - invalid or missing refresh token",
+            "content": {
+                "application/json": {
+                    "type": "object",
+                    "properties": {
+                        "success": {"type": "boolean", "example": False},
+                        "error": {"type": "string", "example": "Refresh token not found"}
+                    }
+                }
+            }
+        },
+        500: {
+            "description": "Internal server error",
+            "content": {
+                "application/json": {
+                    "type": "object",
+                    "properties": {
+                        "success": {"type": "boolean", "example": False},
+                        "error": {"type": "string", "example": "An unexpected error occurred during token refresh"}
+                    }
+                }
+            }
+        }
+    },
+    tags=["Authentication"]
+)
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def jwt_refresh(request):
@@ -147,6 +279,49 @@ def jwt_refresh(request):
         )
 
 
+@extend_schema(
+    operation_id="jwt_logout",
+    summary="Logout User",
+    description="Logout user and blacklist the current JWT refresh token. Requires authentication.",
+    responses={
+        200: {
+            "description": "Logout successful",
+            "content": {
+                "application/json": {
+                    "type": "object",
+                    "properties": {
+                        "success": {"type": "boolean", "example": True},
+                        "message": {"type": "string", "example": "Successfully logged out"}
+                    }
+                }
+            }
+        },
+        400: {
+            "description": "Bad request",
+            "content": {
+                "application/json": {
+                    "type": "object",
+                    "properties": {
+                        "success": {"type": "boolean", "example": False},
+                        "error": {"type": "string", "example": "An unexpected error occurred during logout"}
+                    }
+                }
+            }
+        },
+        401: {
+            "description": "Unauthorized - authentication required",
+            "content": {
+                "application/json": {
+                    "type": "object",
+                    "properties": {
+                        "detail": {"type": "string", "example": "Authentication credentials were not provided."}
+                    }
+                }
+            }
+        }
+    },
+    tags=["Authentication"]
+)
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def jwt_logout(request):
