@@ -51,15 +51,15 @@ class DumpUploadSerializer(serializers.ModelSerializer):
     def get_file_url(self, obj):
         """Get the URL for accessing the uploaded file."""
         return obj.get_file_url()
-    
+
     def get_file_size_display(self, obj):
         """Get human-readable file size."""
         if not obj.file_size:
             return "Unknown"
-        
+
         # Convert bytes to human readable format
         size = obj.file_size
-        for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+        for unit in ["B", "KB", "MB", "GB", "TB"]:
             if size < 1024.0:
                 return f"{size:.1f} {unit}"
             size /= 1024.0
