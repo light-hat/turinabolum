@@ -1,9 +1,12 @@
 FROM python:3.11-slim-bullseye
 
+RUN apt-get update && \
+    add-apt-repository ppa:gift/stable
+
 RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
-    && curl -sSL https://raw.githubusercontent.com/log2timeline/plaso/master/install.sh | bash \
+    plaso-tools \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
