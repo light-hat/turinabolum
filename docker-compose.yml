@@ -42,6 +42,41 @@ services:
     networks:
       - turinabol_net
 
+  os01:
+    image: opensearchproject/opensearch:2.19.1
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms1024m -Xmx1024m"
+      node.name: os01
+      discovery.seed_hosts: os01 #,os02,os03
+      cluster.initial_master_nodes: os01 #,os02,os03
+      plugins.security.ssl.transport.pemkey_filepath: certificates/os01/os01.key
+      plugins.security.ssl.transport.pemcert_filepath: certificates/os01/os01.pem
+      plugins.security.ssl.http.pemkey_filepath: certificates/os01/os01.key
+      plugins.security.ssl.http.pemcert_filepath: certificates/os01/os01.pem
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      JAVA_HOME: /usr/share/opensearch/jdk
+      bootstrap.memory_lock: "true"
+      network.host: "0.0.0.0"
+    ulimits: 
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - "./opensearch/opensearch.yml:/usr/share/opensearch/config/opensearch.yml"
+      - "os-data1:/usr/share/opensearch/data"
+      - "./opensearch/certs:/usr/share/opensearch/config/certificates:ro"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    expose:
+      - 9200
+      - 9600
+    restart: always
+    networks:
+      - turinabol_net
+
   gateway:
     build:
       context: gateway_api
@@ -65,6 +100,7 @@ services:
       - minio
       - db
       - redis
+      - os1
     restart: always
     networks:
       - turinabol_net
@@ -97,6 +133,7 @@ volumes:
   redis_data:
   postgres_data:
   minio-data:
+  os-data1:
 
 networks:
   turinabol_net:
