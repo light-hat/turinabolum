@@ -1,6 +1,7 @@
 import hashlib
 import os
 from django.contrib.auth.models import User
+from django.core.files.storage import default_storage
 from django.db import models
 from django.core.files.storage import default_storage
 
@@ -104,7 +105,7 @@ class DumpUpload(models.Model):
 
     def __str__(self):
         return f"{self.dump_type} Dump: {self.original_filename}"
-    
+
     def calculate_file_hashes(self):
         """
         Calculate MD5, SHA1, and SHA256 hashes for the uploaded file.
@@ -112,40 +113,45 @@ class DumpUpload(models.Model):
         """
         if not self.dump_file:
             return
-            
+
         try:
             # Read file in chunks to handle large files efficiently
-            file_obj = default_storage.open(self.dump_file.name, 'rb')
-            
+            file_obj = default_storage.open(self.dump_file.name, "rb")
+
             md5_hash = hashlib.md5()
             sha1_hash = hashlib.sha1()
             sha256_hash = hashlib.sha256()
-            
+
             # Read file in 8KB chunks
             for chunk in iter(lambda: file_obj.read(8192), b""):
                 md5_hash.update(chunk)
                 sha1_hash.update(chunk)
                 sha256_hash.update(chunk)
-            
+
             file_obj.close()
-            
+
             # Update model fields
             self.md5_hash = md5_hash.hexdigest()
             self.sha1_hash = sha1_hash.hexdigest()
             self.sha256_hash = sha256_hash.hexdigest()
-            
+
             # Calculate file size
             self.file_size = default_storage.size(self.dump_file.name)
-            
+
             # Save without triggering signals
-            self.save(update_fields=['md5_hash', 'sha1_hash', 'sha256_hash', 'file_size'])
-            
+            self.save(
+                update_fields=["md5_hash", "sha1_hash", "sha256_hash", "file_size"]
+            )
+
         except Exception as e:
             # Log error but don't fail the upload
             import logging
+
             logger = logging.getLogger(__name__)
-            logger.error(f"Failed to calculate hashes for {self.original_filename}: {e}")
-    
+            logger.error(
+                f"Failed to calculate hashes for {self.original_filename}: {e}"
+            )
+
     def get_file_url(self):
         """
         Get the URL for accessing the uploaded file.
@@ -153,14 +159,14 @@ class DumpUpload(models.Model):
         if self.dump_file:
             return default_storage.url(self.dump_file.name)
         return None
-    
+
     def delete_file(self):
         """
         Delete the physical file from storage.
         """
         if self.dump_file and default_storage.exists(self.dump_file.name):
             default_storage.delete(self.dump_file.name)
-    
+
     def save(self, *args, **kwargs):
         """
         Override save to handle file operations.
@@ -172,7 +178,7 @@ class DumpUpload(models.Model):
             self.calculate_file_hashes()
         else:
             super().save(*args, **kwargs)
-    
+
     def delete(self, *args, **kwargs):
         """
         Override delete to remove the physical file.

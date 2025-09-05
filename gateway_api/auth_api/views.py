@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.utils import timezone
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -28,15 +28,15 @@ logger = logging.getLogger(__name__)
                 "username": {
                     "type": "string",
                     "description": "User's username",
-                    "example": "admin"
+                    "example": "admin",
                 },
                 "password": {
                     "type": "string",
                     "description": "User's password",
-                    "example": "password123"
-                }
+                    "example": "password123",
+                },
             },
-            "required": ["username", "password"]
+            "required": ["username", "password"],
         }
     },
     responses={
@@ -56,13 +56,16 @@ logger = logging.getLogger(__name__)
                                 "email": {"type": "string"},
                                 "first_name": {"type": "string"},
                                 "last_name": {"type": "string"},
-                                "date_joined": {"type": "string", "format": "date-time"},
-                                "last_login": {"type": "string", "format": "date-time"}
-                            }
-                        }
-                    }
+                                "date_joined": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                },
+                                "last_login": {"type": "string", "format": "date-time"},
+                            },
+                        },
+                    },
                 }
-            }
+            },
         },
         400: {
             "description": "Bad request - missing credentials",
@@ -71,10 +74,13 @@ logger = logging.getLogger(__name__)
                     "type": "object",
                     "properties": {
                         "success": {"type": "boolean", "example": False},
-                        "error": {"type": "string", "example": "Username and password are required"}
-                    }
+                        "error": {
+                            "type": "string",
+                            "example": "Username and password are required",
+                        },
+                    },
                 }
-            }
+            },
         },
         401: {
             "description": "Unauthorized - invalid credentials",
@@ -83,10 +89,10 @@ logger = logging.getLogger(__name__)
                     "type": "object",
                     "properties": {
                         "success": {"type": "boolean", "example": False},
-                        "error": {"type": "string", "example": "Invalid credentials"}
-                    }
+                        "error": {"type": "string", "example": "Invalid credentials"},
+                    },
                 }
-            }
+            },
         },
         500: {
             "description": "Internal server error",
@@ -95,13 +101,16 @@ logger = logging.getLogger(__name__)
                     "type": "object",
                     "properties": {
                         "success": {"type": "boolean", "example": False},
-                        "error": {"type": "string", "example": "An unexpected error occurred during login"}
-                    }
+                        "error": {
+                            "type": "string",
+                            "example": "An unexpected error occurred during login",
+                        },
+                    },
                 }
-            }
-        }
+            },
+        },
     },
-    tags=["Authentication"]
+    tags=["Authentication"],
 )
 @api_view(["POST"])
 @permission_classes([AllowAny])
@@ -184,10 +193,13 @@ def jwt_create(request):
                     "type": "object",
                     "properties": {
                         "success": {"type": "boolean", "example": True},
-                        "access": {"type": "string", "description": "New JWT access token"}
-                    }
+                        "access": {
+                            "type": "string",
+                            "description": "New JWT access token",
+                        },
+                    },
                 }
-            }
+            },
         },
         401: {
             "description": "Unauthorized - invalid or missing refresh token",
@@ -196,10 +208,13 @@ def jwt_create(request):
                     "type": "object",
                     "properties": {
                         "success": {"type": "boolean", "example": False},
-                        "error": {"type": "string", "example": "Refresh token not found"}
-                    }
+                        "error": {
+                            "type": "string",
+                            "example": "Refresh token not found",
+                        },
+                    },
                 }
-            }
+            },
         },
         500: {
             "description": "Internal server error",
@@ -208,13 +223,16 @@ def jwt_create(request):
                     "type": "object",
                     "properties": {
                         "success": {"type": "boolean", "example": False},
-                        "error": {"type": "string", "example": "An unexpected error occurred during token refresh"}
-                    }
+                        "error": {
+                            "type": "string",
+                            "example": "An unexpected error occurred during token refresh",
+                        },
+                    },
                 }
-            }
-        }
+            },
+        },
     },
-    tags=["Authentication"]
+    tags=["Authentication"],
 )
 @api_view(["POST"])
 @permission_classes([AllowAny])
@@ -291,10 +309,13 @@ def jwt_refresh(request):
                     "type": "object",
                     "properties": {
                         "success": {"type": "boolean", "example": True},
-                        "message": {"type": "string", "example": "Successfully logged out"}
-                    }
+                        "message": {
+                            "type": "string",
+                            "example": "Successfully logged out",
+                        },
+                    },
                 }
-            }
+            },
         },
         400: {
             "description": "Bad request",
@@ -303,10 +324,13 @@ def jwt_refresh(request):
                     "type": "object",
                     "properties": {
                         "success": {"type": "boolean", "example": False},
-                        "error": {"type": "string", "example": "An unexpected error occurred during logout"}
-                    }
+                        "error": {
+                            "type": "string",
+                            "example": "An unexpected error occurred during logout",
+                        },
+                    },
                 }
-            }
+            },
         },
         401: {
             "description": "Unauthorized - authentication required",
@@ -314,13 +338,16 @@ def jwt_refresh(request):
                 "application/json": {
                     "type": "object",
                     "properties": {
-                        "detail": {"type": "string", "example": "Authentication credentials were not provided."}
-                    }
+                        "detail": {
+                            "type": "string",
+                            "example": "Authentication credentials were not provided.",
+                        }
+                    },
                 }
-            }
-        }
+            },
+        },
     },
-    tags=["Authentication"]
+    tags=["Authentication"],
 )
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
