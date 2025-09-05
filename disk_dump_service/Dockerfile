@@ -39,10 +39,8 @@ COPY . /app/
 
 EXPOSE 8000
 
-RUN groupadd -g 1000 turinabolum && useradd -u 1000 -g turinabolum -m turinabolum
+RUN chown -R 1000:1000 /app
 
-RUN chown -R turinabolum:turinabolum /app
-
-USER turinabolum
+USER 1000
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
