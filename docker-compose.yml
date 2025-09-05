@@ -144,8 +144,8 @@ services:
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_SECURE=False
-      - OPENSEARCH_HOST=localhost:9200
-      - OPENSEARCH_INDEX_PREFIX=plaso
+      - OPENSEARCH_HOST=os01:9200
+      - OPENSEARCH_INDEX_PREFIX=disk_dump
       - MAX_WORKERS=4
       - TEMP_DIR=/tmp
     depends_on:
