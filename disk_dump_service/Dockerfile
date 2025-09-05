@@ -27,6 +27,8 @@ RUN add-apt-repository universe -y \
     && apt update \
     && apt-get -y install plaso-tools
 
+RUN apt-get update && apt-get remove -y python3-urllib3 && apt-get autoremove -y
+
 WORKDIR /app
 
 COPY requirements.txt .
@@ -36,5 +38,11 @@ RUN pip3 install --no-cache-dir -r requirements.txt --break-system-packages
 COPY . /app/
 
 EXPOSE 8000
+
+RUN groupadd -g 1000 turinabolum && useradd -u 1000 -g turinabolum -m turinabolum
+
+RUN chown -R turinabolum:turinabolum /app
+
+USER turinabolum
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
