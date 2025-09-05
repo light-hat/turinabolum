@@ -6,7 +6,7 @@ class Config:
     MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY", "minioadmin")
     MINIO_SECURE = os.getenv("MINIO_SECURE", "False").lower() == "true"
 
-    OPENSEARCH_HOST = os.getenv("OPENSEARCH_HOST", "os1:9200")
+    OPENSEARCH_HOST = os.getenv("OPENSEARCH_HOST", "os01:9200")
     OPENSEARCH_INDEX_PREFIX = os.getenv("OPENSEARCH_INDEX_PREFIX", "disk_dump")
 
     MAX_WORKERS = int(os.getenv("MAX_WORKERS", 4))

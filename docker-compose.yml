@@ -100,7 +100,7 @@ services:
       - minio
       - db
       - redis
-      - os1
+      - os01
     restart: always
     networks:
       - turinabol_net
@@ -144,7 +144,7 @@ services:
       - MAX_WORKERS=4
       - TEMP_DIR=/tmp
     depends_on:
-      - os1
+      - os01
     restart: always
     scale: 1
     networks:
