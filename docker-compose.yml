@@ -130,6 +130,9 @@ services:
       - turinabol_net
 
   disk_dump_service:
+  # Test
+  # curl -XPOST http://87.228.88.155:8001/process --json '{"dump_id": "550e8400-e29b-41d4-a716-446655440000", "s3_url": "http://minio/"}'
+  # curl -XGET http://87.228.88.155:8001/status/8a78b0e7-dbe4-4d6a-9f44-53695877891f
     build:
       context: disk_dump_service
       dockerfile: Dockerfile
