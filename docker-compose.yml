@@ -158,7 +158,3 @@ volumes:
 
 networks:
   turinabol_net:
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.24.0.0/23"
