@@ -134,6 +134,8 @@ services:
       context: disk_dump_service
       dockerfile: Dockerfile
     image: turinabolum_disk_dump_service:latest
+    ports:
+      - 8001:8001
     environment:
       - MINIO_ENDPOINT=localhost:9000
       - MINIO_ACCESS_KEY=minioadmin

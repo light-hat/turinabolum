@@ -37,10 +37,10 @@ RUN pip3 install --no-cache-dir -r requirements.txt --break-system-packages
 
 COPY . /app/
 
-EXPOSE 8000
+EXPOSE 8001
 
 RUN chown -R 1000:1000 /app
 
 USER 1000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001"]
