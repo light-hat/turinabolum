@@ -1,10 +1,29 @@
-FROM python:3.11-slim-bullseye
+FROM ubuntu:24.04
 
-RUN apt-get update && apt-get install -y \
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    software-properties-common \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libncurses5-dev \
+    libgdbm-dev \
+    libnss3-dev \
+    libreadline-dev \
+    libffi-dev \
+    pkg-config \
+    wget \
     curl \
     gnupg \
+    python3-full \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+RUN add-apt-repository universe -y \
+    && add-apt-repository ppa:gift/stable -y \
+    && apt update \
+    && apt-get -y install plaso-tools
 
 WORKDIR /app
 
