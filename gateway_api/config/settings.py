@@ -18,19 +18,22 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-25sscs%w9_05q6e9%0le@1%$j$+*ymq0ux(v0dqhdu98vy-f+a"
+SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+HOST = environ.get("API_HOST")
 
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000", "http://localhost:5173"]
+PORT = environ.get("API_PORT")
+
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    HOST,
+]
+
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000", "http://localhost:5173", f"http://{HOST}:{PORT}",]
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
@@ -39,10 +42,18 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
+    f"http://{HOST}:{PORT}",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOW_ALL_ORIGINS = DEBUG  # Allow all origins in development
+
+DATETIME_FORMAT = "%d.%m.%Y %H:%M"
+
+DATE_FORMAT = "%d.%m.%Y"
+
+TIME_FORMAT = "%H:%M"
 
 # Application definition
 
