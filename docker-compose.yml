@@ -129,6 +129,27 @@ services:
     networks:
       - turinabol_net
 
+  disk_dump_service:
+    build:
+      context: disk_dump_service
+      dockerfile: Dockerfile
+    image: turinabolum_disk_dump_service:latest
+    environment:
+      - MINIO_ENDPOINT=localhost:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_SECURE=False
+      - OPENSEARCH_HOST=localhost:9200
+      - OPENSEARCH_INDEX_PREFIX=plaso
+      - MAX_WORKERS=4
+      - TEMP_DIR=/tmp
+    depends_on:
+      - os1
+    restart: always
+    scale: 1
+    networks:
+      - turinabol_net
+
 volumes:
   redis_data:
   postgres_data:
