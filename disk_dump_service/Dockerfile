@@ -3,8 +3,7 @@ FROM python:3.11-slim-bullseye
 RUN apt-get update \
     && apt-get install -y software-properties-common
 
-RUN add-apt-repository universe -y \
-    && add-apt-repository ppa:gift/stable -y
+RUN add-apt-repository -y ppa:gift/stable
 
 RUN apt-get update && apt-get install -y \
     curl \
