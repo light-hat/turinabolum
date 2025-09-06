@@ -69,6 +69,20 @@ services:
     networks:
       - turinabol_net
 
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    image: turinabolum-frontend:latest
+    container_name: turinabolum-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000/api/v1
+    depends_on:
+      - gateway
+    restart: always
+
   worker:
     build:
       context: gateway_api
@@ -90,8 +104,6 @@ services:
     entrypoint: celery -A config worker --loglevel=info
     restart: always
     scale: 3
-    networks:
-      - turinabol_net
 
 volumes:
   redis_data:
