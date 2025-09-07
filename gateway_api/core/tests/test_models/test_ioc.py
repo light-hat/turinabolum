@@ -1,6 +1,7 @@
-from core.models import IOC, Case, Incident
 from django.contrib.auth.models import User
 from django.test import TestCase
+
+from core.models import IOC, Case, Incident
 
 
 class IOCModelTest(TestCase):

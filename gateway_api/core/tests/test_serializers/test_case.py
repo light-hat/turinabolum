@@ -1,7 +1,8 @@
-from core.models import Incident
-from core.serializers import CaseSerializer
 from django.contrib.auth.models import User
 from django.test import TestCase
+
+from core.models import Incident
+from core.serializers import CaseSerializer
 
 
 class CaseSerializerTest(TestCase):

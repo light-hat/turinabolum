@@ -1,6 +1,7 @@
-from core.models import Incident
 from django.contrib.auth.models import User
 from django.test import TestCase
+
+from core.models import Incident
 
 
 class IncidentModelTest(TestCase):

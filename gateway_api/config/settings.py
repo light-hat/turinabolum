@@ -15,6 +15,8 @@ from datetime import timedelta
 from os import environ
 from pathlib import Path
 
+from django.core.management.utils import get_random_secret_key
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -79,6 +81,8 @@ INSTALLED_APPS = [
     "core",
     "auth_api",
     "rest",
+    "gql",
+    "workers",
 ]
 
 MIDDLEWARE = [

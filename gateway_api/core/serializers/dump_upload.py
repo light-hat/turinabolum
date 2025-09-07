@@ -1,5 +1,6 @@
-from core.models import DumpUpload
 from rest_framework import serializers
+
+from core.models import DumpUpload
 
 
 class DumpUploadSerializer(serializers.ModelSerializer):
@@ -34,7 +35,6 @@ class DumpUploadSerializer(serializers.ModelSerializer):
             "sha256_hash",
             "processing_log",
             "analysis_results",
-            "kafka_message_id",
         ]
         read_only_fields = [
             "id",
@@ -45,7 +45,6 @@ class DumpUploadSerializer(serializers.ModelSerializer):
             "sha256_hash",
             "processing_log",
             "analysis_results",
-            "kafka_message_id",
         ]
 
     def get_file_url(self, obj):

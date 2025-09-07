@@ -1,5 +1,6 @@
-from core.models import ThreatIntelFeed, ThreatIntelIOC
 from rest_framework import serializers
+
+from core.models import ThreatIntelFeed, ThreatIntelIOC
 
 
 class ThreatIntelFeedSerializer(serializers.ModelSerializer):
