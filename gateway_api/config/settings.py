@@ -179,9 +179,9 @@ DJOSER = {
 
 GRAPHENE = {
     "SCHEMA": "gql.schema.schema",
-    "MIDDLEWARE": [
-        "gql.middleware.DjoserGraphQLAuthMiddleware",
-    ],
+    # "MIDDLEWARE": [
+    #     "gql.middleware.DjoserGraphQLAuthMiddleware",
+    # ],
 }
 
 OPENSEARCH_CONFIG = {
