@@ -1,0 +1,27 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "frontend"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 300
+    labels:
+      - "dependencies"
+      - "security"
+      - "javascript"
+  
+  - package-ecosystem: "pip"
+    directory: "gateway_api"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 300
+    labels:
+      - "dependencies"
+      - "security"
+      - "python"
+  
+  - package-ecosystem: "docker"
+    directory: "."
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 300
