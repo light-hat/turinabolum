@@ -98,6 +98,10 @@ services:
       - DJANGO_ENV=settings
       - API_HOST=127.0.0.1
       - API_PORT=80
+      - OPENSEARCH_HOST=os01
+      - OPENSEARCH_PORT=9200
+      - OPENSEARCH_USER=admin
+      - OPENSEARCH_PASSWORD=admin
     depends_on:
       - minio
       - db
@@ -125,6 +129,10 @@ services:
       - DJANGO_ENV=settings
       - API_HOST=127.0.0.1
       - API_PORT=80
+      - OPENSEARCH_HOST=os01
+      - OPENSEARCH_PORT=9200
+      - OPENSEARCH_USER=admin
+      - OPENSEARCH_PASSWORD=admin
     depends_on:
       - gateway
     entrypoint: celery -A config worker --loglevel=info

@@ -61,8 +61,6 @@ DATE_FORMAT = "%d.%m.%Y"
 
 TIME_FORMAT = "%H:%M"
 
-# Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -74,6 +72,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "djoser",
+    'graphene_django',
     "drf_spectacular",
     "django_filters",
     "corsheaders",
@@ -96,7 +95,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# DRF configuration
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -114,7 +112,6 @@ REST_FRAMEWORK = {
     "TIME_FORMAT": "%H:%M",
 }
 
-# drf-spectacular settings
 SPECTACULAR_SETTINGS = {
     "TITLE": "Turinabolum API",
     "DESCRIPTION": "Digital Forensics and Incident Response System API",
@@ -141,7 +138,6 @@ SPECTACULAR_SETTINGS = {
     ],
 }
 
-# JWT Settings
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -167,26 +163,34 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
-    # Cookie settings for refresh tokens
     "REFRESH_TOKEN_COOKIE_NAME": "refresh_token",
     "REFRESH_TOKEN_COOKIE_HTTPONLY": True,
-    "REFRESH_TOKEN_COOKIE_SECURE": True,  # Set to True for security
+    "REFRESH_TOKEN_COOKIE_SECURE": True,
     "REFRESH_TOKEN_COOKIE_SAMESITE": "Lax",
     "REFRESH_TOKEN_COOKIE_PATH": "/",
 }
 
-# Djoser Settings
 DJOSER = {
     "PASSWORD_RESET_CONFIRM_URL": "#/password/reset/confirm/{uid}/{token}",
     "USERNAME_RESET_CONFIRM_URL": "#/username/reset/confirm/{uid}/{token}",
     "ACTIVATION_URL": "#/activate/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": False,
-    # 'SERIALIZERS': {
-    #     'user': 'api.serializers.CustomUserSerializer',
-    #     'current_user': 'api.serializers.CustomUserSerializer',
-    # },
 }
 
+GRAPHENE = {
+    "SCHEMA": "gql.schema.schema",
+    "MIDDLEWARE": [
+        "gql.auth.DjoserGraphQLAuthMiddleware",
+    ]
+}
+
+OPENSEARCH_CONFIG = {
+    'hosts': [{'host': environ.get("OPENSEARCH_HOST"), 'port': environ.get("OPENSEARCH_HOST")}],
+    'http_auth': (environ.get("OPENSEARCH_USER"), environ.get("OPENSEARCH_PASSWORD")),
+    'use_ssl': False,
+    'verify_certs': False,
+    'ca_certs': None,
+}
 
 ROOT_URLCONF = "config.urls"
 

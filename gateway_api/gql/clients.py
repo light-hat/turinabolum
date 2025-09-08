@@ -1,20 +1,23 @@
-import logging
-
-from django.conf import settings
 from opensearchpy import OpenSearch
+from django.conf import settings
+import logging
 
 logger = logging.getLogger(__name__)
 
-_client = None
+_opensearch_client = None
 
-
-def get_opensearch_client() -> OpenSearch:
-    global _client
-    if _client is None:
-        _client = OpenSearch(
-            hosts=settings.OPENSEARCH_HOSTS,
-            http_auth=settings.OPENSEARCH_AUTH,
-            use_ssl=settings.OPENSEARCH_USE_SSL,
-            verify_certs=settings.OPENSEARCH_VERIFY_CERTS,
-        )
-    return _client
+def get_opensearch_client():
+    """
+    Создает и возвращает клиент OpenSearch.
+    Использует синглтон-паттерн для избежания множественных подключений.
+    """
+    global _opensearch_client
+    if _opensearch_client is None:
+        try:
+            _opensearch_client = OpenSearch(**settings.OPENSEARCH_CONFIG)
+            info = _opensearch_client.info()
+            logger.info(f"Успешно подключились к OpenSearch: {info}")
+        except Exception as e:
+            logger.error(f"Ошибка подключения к OpenSearch: {e}")
+            raise
+    return _opensearch_client
