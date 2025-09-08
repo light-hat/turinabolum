@@ -272,7 +272,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # MinIO/S3 Configuration
-USE_S3 = True
+USE_S3 = False
 
 if USE_S3:
     # AWS S3/MinIO settings
