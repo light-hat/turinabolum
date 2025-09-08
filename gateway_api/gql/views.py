@@ -1,4 +1,4 @@
-from django.conf.settings import DEBUG
+# from django.conf.settings import DEBUG
 from django.views.decorators.csrf import csrf_exempt
 from gql.middleware import DjoserGraphQLAuthMiddleware
 from graphene_django.views import GraphQLView
@@ -19,6 +19,6 @@ class CustomGraphQLView(GraphQLView):
 
 graphql_view = csrf_exempt(
     CustomGraphQLView.as_view(
-        graphiql=DEBUG, middleware=[DjoserGraphQLAuthMiddleware()]
+        graphiql=True, middleware=[DjoserGraphQLAuthMiddleware()]
     )
 )
