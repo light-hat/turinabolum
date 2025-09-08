@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from core.models import DumpUpload
+from rest_framework import serializers
 
 
 class DumpUploadSerializer(serializers.ModelSerializer):

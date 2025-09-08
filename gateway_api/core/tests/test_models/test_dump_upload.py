@@ -1,8 +1,7 @@
+from core.models import DumpUpload
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
-
-from core.models import DumpUpload
 
 
 class DumpUploadModelTest(TestCase):

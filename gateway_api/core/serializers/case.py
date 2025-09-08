@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from core.models import Case
+from rest_framework import serializers
 
 from .incident import IncidentSerializer
 

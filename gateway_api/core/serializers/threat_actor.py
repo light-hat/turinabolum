@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from core.models import IncidentThreatActor, ThreatActor
+from rest_framework import serializers
 
 
 class ThreatActorSerializer(serializers.ModelSerializer):

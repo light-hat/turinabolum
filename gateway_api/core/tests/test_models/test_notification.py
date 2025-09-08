@@ -1,7 +1,6 @@
+from core.models import Notification, UserNotification
 from django.contrib.auth.models import User
 from django.test import TestCase
-
-from core.models import Notification, UserNotification
 
 
 class NotificationModelTest(TestCase):

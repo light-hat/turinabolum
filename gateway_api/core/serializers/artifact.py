@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from core.models import Artifact, ArtifactTag
+from rest_framework import serializers
 
 from .evidence import EvidenceSourceSerializer
 

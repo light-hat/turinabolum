@@ -1,8 +1,7 @@
-from django.contrib.auth.models import User
-from django.test import TestCase
-
 from core.models import Case, Incident
 from core.serializers import IOCSerializer
+from django.contrib.auth.models import User
+from django.test import TestCase
 
 
 class IOCSerializerTest(TestCase):

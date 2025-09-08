@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from core.models import EvidenceSource
+from rest_framework import serializers
 
 
 class EvidenceSourceSerializer(serializers.ModelSerializer):

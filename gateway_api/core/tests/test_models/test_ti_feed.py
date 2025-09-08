@@ -1,6 +1,5 @@
-from django.test import TestCase
-
 from core.models import ThreatIntelFeed, ThreatIntelIOC
+from django.test import TestCase
 
 
 class ThreatIntelFeedModelTest(TestCase):

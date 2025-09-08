@@ -1,7 +1,6 @@
+from core.models import Incident
 from django.contrib.auth.models import User
 from rest_framework import serializers
-
-from core.models import Incident
 
 
 class IncidentSerializer(serializers.ModelSerializer):

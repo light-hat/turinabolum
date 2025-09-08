@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from core.models import IOC
+from rest_framework import serializers
 
 
 class IOCSerializer(serializers.ModelSerializer):

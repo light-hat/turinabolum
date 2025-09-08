@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from core.models import CorrelationResult
+from rest_framework import serializers
 
 
 class CorrelationResultSerializer(serializers.ModelSerializer):

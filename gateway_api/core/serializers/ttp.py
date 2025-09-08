@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from core.models import TTP, CaseTTP
+from rest_framework import serializers
 
 
 class TTPSerializer(serializers.ModelSerializer):
