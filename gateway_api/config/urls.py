@@ -37,7 +37,7 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
-    path('graphql/', graphql_view, name='graphql'),
+    path("graphql/", graphql_view, name="graphql"),
 ]
 
 # Serve media files in development

@@ -1,10 +1,12 @@
-from opensearchpy import OpenSearch
-from django.conf import settings
 import logging
+
+from django.conf import settings
+from opensearchpy import OpenSearch
 
 logger = logging.getLogger(__name__)
 
 _opensearch_client = None
+
 
 def get_opensearch_client():
     """

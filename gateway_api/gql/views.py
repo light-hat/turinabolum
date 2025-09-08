@@ -1,7 +1,8 @@
-from django.views.decorators.csrf import csrf_exempt
-from graphene_django.views import GraphQLView
-from gql.middleware import DjoserGraphQLAuthMiddleware
 from django.conf.settings import DEBUG
+from django.views.decorators.csrf import csrf_exempt
+from gql.middleware import DjoserGraphQLAuthMiddleware
+from graphene_django.views import GraphQLView
+
 
 class CustomGraphQLView(GraphQLView):
     """
@@ -15,9 +16,9 @@ class CustomGraphQLView(GraphQLView):
         context.user = request.user
         return context
 
+
 graphql_view = csrf_exempt(
     CustomGraphQLView.as_view(
-        graphiql=DEBUG,
-        middleware=[DjoserGraphQLAuthMiddleware()]
+        graphiql=DEBUG, middleware=[DjoserGraphQLAuthMiddleware()]
     )
 )

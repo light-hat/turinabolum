@@ -72,7 +72,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "djoser",
-    'graphene_django',
+    "graphene_django",
     "drf_spectacular",
     "django_filters",
     "corsheaders",
@@ -181,15 +181,17 @@ GRAPHENE = {
     "SCHEMA": "gql.schema.schema",
     "MIDDLEWARE": [
         "gql.auth.DjoserGraphQLAuthMiddleware",
-    ]
+    ],
 }
 
 OPENSEARCH_CONFIG = {
-    'hosts': [{'host': environ.get("OPENSEARCH_HOST"), 'port': environ.get("OPENSEARCH_HOST")}],
-    'http_auth': (environ.get("OPENSEARCH_USER"), environ.get("OPENSEARCH_PASSWORD")),
-    'use_ssl': False,
-    'verify_certs': False,
-    'ca_certs': None,
+    "hosts": [
+        {"host": environ.get("OPENSEARCH_HOST"), "port": environ.get("OPENSEARCH_HOST")}
+    ],
+    "http_auth": (environ.get("OPENSEARCH_USER"), environ.get("OPENSEARCH_PASSWORD")),
+    "use_ssl": False,
+    "verify_certs": False,
+    "ca_certs": None,
 }
 
 ROOT_URLCONF = "config.urls"
