@@ -180,7 +180,7 @@ DJOSER = {
 GRAPHENE = {
     "SCHEMA": "gql.schema.schema",
     "MIDDLEWARE": [
-        "gql.auth.DjoserGraphQLAuthMiddleware",
+        "gql.middleware.DjoserGraphQLAuthMiddleware",
     ],
 }
 
