@@ -19,7 +19,6 @@ class CustomGraphQLView(GraphQLView):
 
 graphql_view = csrf_exempt(
     CustomGraphQLView.as_view(
-        graphiql=True, #middleware=[DjoserGraphQLAuthMiddleware()
-        ]
+        graphiql=True, #middleware=[DjoserGraphQLAuthMiddleware()]
     )
 )
