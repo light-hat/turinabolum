@@ -1,80 +1,15 @@
 @import "tailwindcss";
 
-@theme {
-  --color-background: 0 0% 100%;
-  --color-foreground: 0 0% 0%;
-  --color-card: 0 0% 100%;
-  --color-card-foreground: 0 0% 0%;
-  --color-popover: 0 0% 100%;
-  --color-popover-foreground: 0 0% 0%;
-  --color-primary: 0 0% 0%;
-  --color-primary-foreground: 0 0% 100%;
-  --color-secondary: 0 0% 96%;
-  --color-secondary-foreground: 0 0% 0%;
-  --color-muted: 0 0% 96%;
-  --color-muted-foreground: 0 0% 45%;
-  --color-accent: 0 0% 96%;
-  --color-accent-foreground: 0 0% 0%;
-  --color-destructive: 0 84.2% 60.2%;
-  --color-destructive-foreground: 0 0% 98%;
-  --color-border: 0 0% 90%;
-  --color-input: 0 0% 100%;
-  --color-ring: 0 0% 0%;
-  --color-sidebar: 0 0% 98%;
-  --color-sidebar-foreground: 0 0% 0%;
-  --color-sidebar-primary: 0 0% 0%;
-  --color-sidebar-primary-foreground: 0 0% 100%;
-  --color-sidebar-accent: 0 0% 96%;
-  --color-sidebar-accent-foreground: 0 0% 0%;
-  --color-sidebar-border: 0 0% 90%;
-  --color-sidebar-ring: 0 0% 0%;
-  --radius: 0.5rem;
-  --sidebar-width: 20rem;
-  --sidebar-width-icon: 4rem;
-}
-
-@theme dark {
-  --color-background: 0 0% 0%;
-  --color-foreground: 0 0% 100%;
-  --color-card: 0 0% 6%;
-  --color-card-foreground: 0 0% 100%;
-  --color-popover: 0 0% 6%;
-  --color-popover-foreground: 0 0% 100%;
-  --color-primary: 0 0% 100%;
-  --color-primary-foreground: 0 0% 0%;
-  --color-secondary: 0 0% 10%;
-  --color-secondary-foreground: 0 0% 100%;
-  --color-muted: 0 0% 10%;
-  --color-muted-foreground: 0 0% 70%;
-  --color-accent: 0 0% 10%;
-  --color-accent-foreground: 0 0% 100%;
-  --color-destructive: 0 62.8% 30.6%;
-  --color-destructive-foreground: 0 0% 100%;
-  --color-border: 0 0% 20%;
-  --color-input: 0 0% 10%;
-  --color-ring: 0 0% 100%;
-  --color-sidebar: 0 0% 2%;
-  --color-sidebar-foreground: 0 0% 100%;
-  --color-sidebar-primary: 0 0% 100%;
-  --color-sidebar-primary-foreground: 0 0% 0%;
-  --color-sidebar-accent: 0 0% 10%;
-  --color-sidebar-accent-foreground: 0 0% 100%;
-  --color-sidebar-border: 0 0% 20%;
-  --color-sidebar-ring: 0 0% 100%;
-  --sidebar-width: 20rem;
-  --sidebar-width-icon: 4rem;
-}
-
 @layer base {
   * {
-    border-color: theme(colors.border);
+    border-color: hsl(var(--border));
   }
   html {
     color-scheme: light;
   }
   body {
-    background-color: theme(colors.background);
-    color: theme(colors.foreground);
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: 'Times New Roman', Times, serif;
   }
   .dark {
