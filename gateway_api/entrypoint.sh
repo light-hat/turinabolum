@@ -1,21 +1,11 @@
 #!/bin/sh
 
-export DJANGO_SETTINGS_MODULE="config.$DJANGO_ENV"
+python3 manage.py collectstatic --no-input
+python3 manage.py makemigrations --no-input
+python3 manage.py migrate --no-input
+python3 manage.py initdb
+python3 manage.py init_minio
 
-if [ "$DJANGO_ENV" = "dev" ]; then
-  export RELOAD="true"
-fi
-
-python3 manage.py makemigrations --no-input --settings=config.$DJANGO_ENV
-python3 manage.py migrate --no-input --settings=config.$DJANGO_ENV
-python3 manage.py collectstatic --no-input --settings=config.$DJANGO_ENV
-python3 manage.py initdb --settings=config.$DJANGO_ENV
-python3 manage.py init_minio --settings=config.$DJANGO_ENV
-
-
-# if [ "$DJANGO_ENV" = "staging" ]; then
-#   python3 manage.py ...
-# fi
 
 exec uvicorn config.asgi:application \
   --host 0.0.0.0 \

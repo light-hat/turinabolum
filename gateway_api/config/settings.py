@@ -15,22 +15,31 @@ from datetime import timedelta
 from os import environ
 from pathlib import Path
 
+from django.core.management.utils import get_random_secret_key
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-25sscs%w9_05q6e9%0le@1%$j$+*ymq0ux(v0dqhdu98vy-f+a"
+SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+HOST = environ.get("API_HOST")
 
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000", "http://localhost:5173"]
+PORT = environ.get("API_PORT")
+
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    HOST,
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://localhost:5173",
+    f"http://{HOST}:{PORT}",
+]
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
@@ -39,12 +48,18 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
+    f"http://{HOST}:{PORT}",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOW_ALL_ORIGINS = DEBUG  # Allow all origins in development
 
-# Application definition
+DATETIME_FORMAT = "%d.%m.%Y %H:%M"
+
+DATE_FORMAT = "%d.%m.%Y"
+
+TIME_FORMAT = "%H:%M"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -57,6 +72,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "djoser",
+    "graphene_django",
     "drf_spectacular",
     "django_filters",
     "corsheaders",
@@ -64,6 +80,8 @@ INSTALLED_APPS = [
     "core",
     "auth_api",
     "rest",
+    "gql",
+    "workers",
 ]
 
 MIDDLEWARE = [
@@ -77,7 +95,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# DRF configuration
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -95,7 +112,6 @@ REST_FRAMEWORK = {
     "TIME_FORMAT": "%H:%M",
 }
 
-# drf-spectacular settings
 SPECTACULAR_SETTINGS = {
     "TITLE": "Turinabolum API",
     "DESCRIPTION": "Digital Forensics and Incident Response System API",
@@ -122,7 +138,6 @@ SPECTACULAR_SETTINGS = {
     ],
 }
 
-# JWT Settings
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -148,26 +163,36 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
-    # Cookie settings for refresh tokens
     "REFRESH_TOKEN_COOKIE_NAME": "refresh_token",
     "REFRESH_TOKEN_COOKIE_HTTPONLY": True,
-    "REFRESH_TOKEN_COOKIE_SECURE": True,  # Set to True for security
+    "REFRESH_TOKEN_COOKIE_SECURE": True,
     "REFRESH_TOKEN_COOKIE_SAMESITE": "Lax",
     "REFRESH_TOKEN_COOKIE_PATH": "/",
 }
 
-# Djoser Settings
 DJOSER = {
     "PASSWORD_RESET_CONFIRM_URL": "#/password/reset/confirm/{uid}/{token}",
     "USERNAME_RESET_CONFIRM_URL": "#/username/reset/confirm/{uid}/{token}",
     "ACTIVATION_URL": "#/activate/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": False,
-    # 'SERIALIZERS': {
-    #     'user': 'api.serializers.CustomUserSerializer',
-    #     'current_user': 'api.serializers.CustomUserSerializer',
-    # },
 }
 
+GRAPHENE = {
+    "SCHEMA": "gql.schema.schema",
+    # "MIDDLEWARE": [
+    #     "gql.middleware.DjoserGraphQLAuthMiddleware",
+    # ],
+}
+
+OPENSEARCH_CONFIG = {
+    "hosts": [
+        {"host": environ.get("OPENSEARCH_HOST"), "port": environ.get("OPENSEARCH_HOST")}
+    ],
+    "http_auth": (environ.get("OPENSEARCH_USER"), environ.get("OPENSEARCH_PASSWORD")),
+    "use_ssl": False,
+    "verify_certs": False,
+    "ca_certs": None,
+}
 
 ROOT_URLCONF = "config.urls"
 
@@ -238,8 +263,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = '/static/'
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = STATIC_DIR
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -262,7 +288,7 @@ if USE_S3:
 
     # File storage settings
     DEFAULT_FILE_STORAGE = "core.storage.MediaMinIOStorage"
-    STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
+    #STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
 
     # Media files settings
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"

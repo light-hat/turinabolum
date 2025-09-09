@@ -87,12 +87,6 @@ class DumpUpload(models.Model):
         verbose_name="Результаты анализа",
         help_text="Результаты автоматического анализа дампа в формате JSON",
     )
-    kafka_message_id = models.CharField(
-        max_length=100,
-        blank=True,
-        verbose_name="ID сообщения Kafka",
-        help_text="Идентификатор сообщения Kafka, отправленного для обработки дампа",
-    )
 
     class Meta:
         verbose_name = "Загрузка дампа"

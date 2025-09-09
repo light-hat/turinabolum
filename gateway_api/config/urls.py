@@ -24,6 +24,7 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from gql.views import graphql_view
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -36,8 +37,8 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+    path("graphql/", graphql_view, name="graphql"),
 ]
 
-# Serve media files in development
-if settings.DEBUG and not settings.USE_S3:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
