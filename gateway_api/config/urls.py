@@ -41,15 +41,4 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    
-    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
-    urlpatterns += patterns('', (
-        r'^static/(?P<path>.*)$',
-        'django.views.static.serve',
-        {'document_root': settings.STATIC_ROOT}
-    ))
-
-# Serve media files in development
-if settings.DEBUG and not settings.USE_S3:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
