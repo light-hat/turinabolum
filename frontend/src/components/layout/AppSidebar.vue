@@ -1,155 +1,129 @@
 <template>
-  <Sidebar collapsible="icon">
-    <SidebarHeader>
-      <div class="flex h-16 items-center border-b px-6">
-        <div class="flex items-center space-x-2">
-          <div class="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
-            <span class="text-primary-foreground font-bold text-sm">T</span>
-          </div>
-          <div>
-            <h2 class="text-lg font-semibold">Turinabolum</h2>
-            <p class="text-xs text-muted-foreground">v1.0.0</p>
-          </div>
-        </div>
+  <Sidebar v-bind="props" class="border-r border-sidebar-border bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+    <SidebarHeader class="p-4 border-b border-sidebar-border">
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg" as-child class="h-12 px-3">
+            <a href="#" class="flex items-center gap-3">
+              <div class="flex aspect-square size-10 items-center justify-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground shadow-sm">
+                <GalleryVerticalEnd class="size-5" />
+              </div>
+              <div class="flex flex-col gap-0.5 leading-none min-w-0">
+                <span class="font-bold text-base">Turinabolum</span>
+                <span class="text-xs text-muted-foreground font-medium">v1.0.0</span>
+              </div>
+            </a>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+      <div class="mt-4">
+        <SearchForm />
       </div>
     </SidebarHeader>
-    
-    <SidebarContent>
-      <!-- Search Bar -->
-      <div class="p-4 border-b">
-        <div class="relative">
-          <SearchIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search incidents..."
-            class="w-full pl-10 pr-4 py-2 bg-background border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-        </div>
-      </div>
-      
-      <nav class="space-y-1 px-3 py-4">
-        <SidebarItem
-          to="/dashboard"
-          label="Dashboard"
-          :icon="HomeIcon"
-        />
-        
-        <div class="space-y-1">
-          <button
-            @click="toggleIncidentsDropdown"
-            class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:text-primary"
+    <SidebarContent class="p-2">
+      <SidebarGroup>
+        <SidebarGroupLabel class="px-3 py-2 text-xs font-semibold text-muted-foreground">Platform</SidebarGroupLabel>
+        <SidebarMenu class="space-y-1">
+          <Collapsible
+            v-for="(item, index) in data.navMain"
+            :key="item.title"
+            :default-open="index === 0"
+            class="group/collapsible"
           >
-            <FileTextIcon class="h-4 w-4" />
-            <span>Incidents</span>
-            <ChevronDownIcon 
-              :class="cn('ml-auto h-4 w-4 transition-transform', incidentsDropdownOpen && 'rotate-180')"
-            />
-          </button>
-          
-          <div v-if="incidentsDropdownOpen" class="ml-6 space-y-1">
-            <SidebarItem
-              to="/incidents"
-              label="All Incidents"
-              :icon="ListIcon"
-            />
-            <SidebarItem
-              to="/incidents/new"
-              label="New Incident"
-              :icon="PlusIcon"
-            />
-          </div>
-        </div>
-        
-        <SidebarItem
-          to="/dumps"
-          label="Dump Uploads"
-          :icon="UploadIcon"
-        />
-        
-        <SidebarItem
-          to="/graph"
-          label="Graph View"
-          :icon="NetworkIcon"
-        />
-        
-        <SidebarItem
-          to="/profile"
-          label="Profile"
-          :icon="UserIcon"
-        />
-      </nav>
+            <SidebarMenuItem>
+              <CollapsibleTrigger as-child v-if="item.items.length">
+                <SidebarMenuButton class="h-10 px-3 font-medium text-sm hover:bg-sidebar-accent/50 transition-colors font-serif">
+                  {{ item.title }}
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+              <SidebarMenuButton v-else as-child class="h-10 px-3 font-medium text-sm hover:bg-sidebar-accent/50 transition-colors font-serif">
+                <router-link :to="item.url" class="block w-full">{{ item.title }}</router-link>
+              </SidebarMenuButton>
+              <CollapsibleContent v-if="item.items.length" class="overflow-hidden transition-all duration-200">
+                <SidebarMenuSub class="mt-1 space-y-1">
+                  <SidebarMenuSubItem v-for="childItem in item.items" :key="childItem.title">
+                    <SidebarMenuSubButton
+                      as-child
+                      :is-active="childItem.isActive || false"
+                      class="h-9 px-3 text-sm hover:bg-sidebar-accent/50 transition-colors font-serif"
+                    >
+                      <router-link :to="childItem.url" class="block w-full">{{ childItem.title }}</router-link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </SidebarMenuItem>
+          </Collapsible>
+        </SidebarMenu>
+      </SidebarGroup>
     </SidebarContent>
-    
-    <SidebarFooter>
-      <div class="flex items-center gap-3">
-        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm">
-          {{ userInitials }}
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="text-sm font-medium truncate">{{ authStore.user?.username }}</p>
-          <p class="text-xs text-muted-foreground truncate">{{ authStore.user?.email }}</p>
-        </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          @click="handleLogout"
-          class="h-8 w-8"
-        >
-          <LogOutIcon class="h-4 w-4" />
-        </Button>
-      </div>
-    </SidebarFooter>
-    
     <SidebarRail />
   </Sidebar>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import Sidebar from '@/components/ui/sidebar.vue'
-import SidebarHeader from '@/components/ui/sidebar-header.vue'
-import SidebarContent from '@/components/ui/sidebar-content.vue'
-import SidebarFooter from '@/components/ui/sidebar-footer.vue'
-import SidebarRail from '@/components/ui/sidebar-rail.vue'
-import SidebarItem from '@/components/ui/sidebar-item.vue'
-import Button from '@/components/ui/button.vue'
-import { cn } from '@/lib/utils'
-import {
-  HomeIcon,
-  FileTextIcon,
-  ListIcon,
-  PlusIcon,
-  UploadIcon,
-  NetworkIcon,
-  UserIcon,
-  LogOutIcon,
-  ChevronDownIcon,
-  SearchIcon
-} from 'lucide-vue-next'
+import { GalleryVerticalEnd } from "lucide-vue-next"
+import SearchForm from "@/components/layout/SearchForm.vue"
+import Collapsible from "@/components/ui/collapsible.vue"
+import CollapsibleContent from "@/components/ui/collapsible-content.vue"
+import CollapsibleTrigger from "@/components/ui/collapsible-trigger.vue"
+import Sidebar from "@/components/ui/sidebar.vue"
+import SidebarContent from "@/components/ui/sidebar-content.vue"
+import SidebarGroup from "@/components/ui/sidebar-group.vue"
+import SidebarGroupLabel from "@/components/ui/sidebar-group-label.vue"
+import SidebarHeader from "@/components/ui/sidebar-header.vue"
+import SidebarMenu from "@/components/ui/sidebar-menu.vue"
+import SidebarMenuButton from "@/components/ui/sidebar-menu-button.vue"
+import SidebarMenuItem from "@/components/ui/sidebar-menu-item.vue"
+import SidebarMenuSub from "@/components/ui/sidebar-menu-sub.vue"
+import SidebarMenuSubButton from "@/components/ui/sidebar-menu-sub-button.vue"
+import SidebarMenuSubItem from "@/components/ui/sidebar-menu-sub-item.vue"
+import SidebarRail from "@/components/ui/sidebar-rail.vue"
 
-const router = useRouter()
-const authStore = useAuthStore()
-
-const incidentsDropdownOpen = ref(false)
-
-const userInitials = computed(() => {
-  if (!authStore.user) return 'U'
-  const firstName = authStore.user.first_name || ''
-  const lastName = authStore.user.last_name || ''
-  if (firstName && lastName) {
-    return `${firstName[0]}${lastName[0]}`.toUpperCase()
-  }
-  return authStore.user.username[0].toUpperCase()
-})
-
-const toggleIncidentsDropdown = () => {
-  incidentsDropdownOpen.value = !incidentsDropdownOpen.value
+interface SidebarProps {
+  collapsible?: 'offcanvas' | 'icon' | 'none'
+  class?: string
 }
 
-const handleLogout = async () => {
-  await authStore.logout()
-  router.push('/login')
+const props = withDefaults(defineProps<SidebarProps>(), {
+  collapsible: "icon",
+})
+
+// Navigation data for Turinabolum
+const data = {
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      items: [],
+    },
+    {
+      title: "Incidents",
+      url: "/incidents",
+      items: [
+        {
+          title: "All Incidents",
+          url: "/incidents",
+          isActive: false,
+        },
+        {
+          title: "New Incident",
+          url: "/incidents/new",
+          isActive: false,
+        },
+      ],
+    },
+    {
+      title: "Dumps",
+      url: "/dumps",
+      items: [],
+    },
+    {
+      title: "Graph",
+      url: "/graph",
+      items: [],
+    },
+  ],
+  projects: [],
 }
 </script>

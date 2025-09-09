@@ -47,11 +47,11 @@ const router = createRouter({
           component: () => import('@/views/incidents/IncidentDetailsView.vue'),
           props: true
         },
-        // {
-        //   path: 'dumps',
-        //   name: 'dumps',
-        //   component: () => import('@/views/dumps/DumpsView.vue')
-        // },
+        {
+          path: 'dumps',
+          name: 'dumps',
+          component: () => import('@/views/dumps/DumpsView.vue')
+        },
         {
           path: 'graph',
           name: 'graph',

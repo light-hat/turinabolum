@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 
 export const useThemeStore = defineStore('theme', () => {
   const theme = ref<'light' | 'dark' | 'system'>(
-    (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system'
+    (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'dark'
   )
 
   const isDark = ref(false)
@@ -47,6 +47,11 @@ export const useThemeStore = defineStore('theme', () => {
 
   // Initialize theme on store creation
   applyTheme()
+
+  // Watch for theme changes and apply them
+  watch(theme, () => {
+    applyTheme()
+  })
 
   return {
     theme,

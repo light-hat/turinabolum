@@ -52,16 +52,22 @@ export const useAuthStore = defineStore('auth', () => {
         await fetchUser()
       } catch (error) {
         // Token might be expired, try to refresh
-        if (refreshToken.value) {
+        if (refreshToken.value === 'cookie') {
           try {
             await refreshAccessToken()
+            await fetchUser()
           } catch (refreshError) {
+            console.log('Token refresh failed, logging out')
             logout()
           }
         } else {
+          console.log('No refresh token available, logging out')
           logout()
         }
       }
+    } else {
+      // No access token found - this is normal for first-time visitors
+      // console.log('No access token found')
     }
   }
 
@@ -75,13 +81,14 @@ export const useAuthStore = defineStore('auth', () => {
       console.log('API base URL:', api.defaults.baseURL)
       const response = await api.post('/auth/jwt/create/', credentials)
       console.log('Login response:', response.data)
-      const { access, refresh } = response.data
+      const { access, user } = response.data
       
       token.value = access
-      refreshToken.value = refresh
+      // Refresh token is set as HttpOnly cookie, so we don't store it in localStorage
+      refreshToken.value = 'cookie' // Placeholder to indicate we have a refresh token
       
       localStorage.setItem('access_token', access)
-      localStorage.setItem('refresh_token', refresh)
+      // Don't store refresh token in localStorage as it's HttpOnly
       
       setAuthHeaders()
       await fetchUser()
@@ -117,29 +124,29 @@ export const useAuthStore = defineStore('auth', () => {
   // Fetch current user
   const fetchUser = async () => {
     try {
+      console.log('Fetching user data...')
       const response = await api.get('/auth/users/me/')
       user.value = response.data
-    } catch (err) {
+      console.log('User data fetched successfully:', response.data)
+    } catch (err: any) {
+      console.error('Error fetching user:', err)
       throw err
     }
   }
 
   // Refresh access token
   const refreshAccessToken = async () => {
-    if (!refreshToken.value) {
-      throw new Error('No refresh token available')
-    }
-    
     try {
-      const response = await api.post('/auth/jwt/refresh/', {
-        refresh: refreshToken.value
-      })
+      console.log('Refreshing access token...')
+      const response = await api.post('/auth/jwt/refresh/', {})
       
       const { access } = response.data
       token.value = access
       localStorage.setItem('access_token', access)
       setAuthHeaders()
-    } catch (err) {
+      console.log('Access token refreshed successfully')
+    } catch (err: any) {
+      console.error('Error refreshing token:', err)
       throw err
     }
   }
@@ -182,25 +189,33 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Logout
   const logout = async () => {
-    if (refreshToken.value) {
-      try {
+    try {
+      // Try to logout from server if we have a refresh token
+      if (refreshToken.value && refreshToken.value !== 'cookie') {
         await api.post('/auth/jwt/logout/', {
           refresh: refreshToken.value
         })
-      } catch (err) {
-        // Ignore logout errors
       }
+    } catch (err) {
+      // Ignore logout errors - we still want to clear local state
+      console.log('Logout API call failed, but continuing with local logout')
     }
     
+    // Clear all local state
     user.value = null
     token.value = null
     refreshToken.value = null
     error.value = null
     
+    // Clear localStorage
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
     
+    // Clear auth headers
     clearAuthHeaders()
+    
+    // Redirect to login page
+    window.location.href = '/login'
   }
 
   return {

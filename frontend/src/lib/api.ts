@@ -3,6 +3,7 @@ import axios from 'axios'
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1',
   timeout: 10000,
+  withCredentials: true, // Include cookies in requests
   headers: {
     'Content-Type': 'application/json',
   },
@@ -31,26 +32,23 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
 
-      const refreshToken = localStorage.getItem('refresh_token')
-      if (refreshToken) {
-        try {
-          const response = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'}/auth/jwt/refresh/`,
-            { refresh: refreshToken }
-          )
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'}/auth/jwt/refresh/`,
+          {},
+          { withCredentials: true } // Include cookies in the request
+        )
 
-          const { access } = response.data
-          localStorage.setItem('access_token', access)
-          originalRequest.headers.Authorization = `Bearer ${access}`
+        const { access } = response.data
+        localStorage.setItem('access_token', access)
+        originalRequest.headers.Authorization = `Bearer ${access}`
 
-          return api(originalRequest)
-        } catch (refreshError) {
-          // Refresh failed, redirect to login
-          localStorage.removeItem('access_token')
-          localStorage.removeItem('refresh_token')
-          window.location.href = '/login'
-          return Promise.reject(refreshError)
-        }
+        return api(originalRequest)
+      } catch (refreshError) {
+        // Refresh failed, redirect to login
+        localStorage.removeItem('access_token')
+        window.location.href = '/login'
+        return Promise.reject(refreshError)
       }
     }
 

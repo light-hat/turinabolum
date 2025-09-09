@@ -1,21 +1,25 @@
 <template>
   <div class="space-y-6">
-    <div>
-      <h1 class="text-3xl font-bold tracking-tight">Create New Incident</h1>
-      <p class="text-muted-foreground">
-        Create a new security incident for investigation
-      </p>
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-bold">New Incident</h1>
+      <Button variant="outline" @click="$router.back()">
+        <ArrowLeftIcon class="mr-2 h-4 w-4" />
+        Back
+      </Button>
     </div>
     
     <Card>
       <CardHeader>
-        <CardTitle>Incident Details</CardTitle>
+        <CardTitle>Create New Incident</CardTitle>
+        <CardDescription>
+          Fill in the details to create a new security incident
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <form @submit.prevent="handleSubmit" class="space-y-6">
+        <form @submit.prevent="handleSubmit" class="space-y-4">
           <div class="grid gap-4 md:grid-cols-2">
             <div class="space-y-2">
-              <Label for="title">Title *</Label>
+              <Label for="title">Title</Label>
               <Input
                 id="title"
                 v-model="form.title"
@@ -23,86 +27,39 @@
                 required
               />
             </div>
-            
             <div class="space-y-2">
-              <Label for="severity">Severity *</Label>
-              <select
-                id="severity"
-                v-model="form.severity"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                required
-              >
-                <option value="">Select severity</option>
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="critical">Critical</option>
-              </select>
+              <Label for="severity">Severity</Label>
+              <Select v-model="form.severity">
+                <SelectTrigger>
+                  <SelectValue placeholder="Select severity" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Low">Low</SelectItem>
+                  <SelectItem value="Medium">Medium</SelectItem>
+                  <SelectItem value="High">High</SelectItem>
+                  <SelectItem value="Critical">Critical</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           
           <div class="space-y-2">
-            <Label for="description">Description *</Label>
-            <textarea
+            <Label for="description">Description</Label>
+            <Textarea
               id="description"
               v-model="form.description"
-              placeholder="Describe the incident in detail"
-              class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              placeholder="Enter incident description"
+              rows="4"
               required
             />
           </div>
           
-          <div class="grid gap-4 md:grid-cols-2">
-            <div class="space-y-2">
-              <Label for="classification">Classification</Label>
-              <select
-                id="classification"
-                v-model="form.classification"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <option value="">Select classification</option>
-                <option value="malware">Malware</option>
-                <option value="phishing">Phishing</option>
-                <option value="data_breach">Data Breach</option>
-                <option value="network_intrusion">Network Intrusion</option>
-                <option value="insider_threat">Insider Threat</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            
-            <div class="space-y-2">
-              <Label for="status">Status</Label>
-              <select
-                id="status"
-                v-model="form.status"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <option value="open">Open</option>
-                <option value="investigating">Investigating</option>
-                <option value="resolved">Resolved</option>
-                <option value="closed">Closed</option>
-              </select>
-            </div>
-          </div>
-          
-          <div class="space-y-2">
-            <Label for="tags">Tags</Label>
-            <Input
-              id="tags"
-              v-model="form.tags"
-              placeholder="Enter tags separated by commas"
-            />
-            <p class="text-sm text-muted-foreground">
-              Separate multiple tags with commas (e.g., malware, banking, trojan)
-            </p>
-          </div>
-          
-          <div class="flex items-center gap-4">
-            <Button type="submit" :disabled="isSubmitting">
-              {{ isSubmitting ? 'Creating...' : 'Create Incident' }}
-            </Button>
+          <div class="flex justify-end space-x-2">
             <Button type="button" variant="outline" @click="$router.back()">
               Cancel
+            </Button>
+            <Button type="submit" :disabled="isSubmitting">
+              {{ isSubmitting ? 'Creating...' : 'Create Incident' }}
             </Button>
           </div>
         </form>
@@ -118,21 +75,27 @@ import Card from '@/components/ui/card.vue'
 import CardHeader from '@/components/ui/card-header.vue'
 import CardContent from '@/components/ui/card-content.vue'
 import CardTitle from '@/components/ui/card-title.vue'
+import CardDescription from '@/components/ui/card-description.vue'
 import Button from '@/components/ui/button.vue'
 import Input from '@/components/ui/input.vue'
 import Label from '@/components/ui/label.vue'
+import Textarea from '@/components/ui/textarea.vue'
+import Select from '@/components/ui/select.vue'
+import SelectContent from '@/components/ui/select-content.vue'
+import SelectItem from '@/components/ui/select-item.vue'
+import SelectTrigger from '@/components/ui/select-trigger.vue'
+import SelectValue from '@/components/ui/select-value.vue'
+import { ArrowLeftIcon } from 'lucide-vue-next'
 
 const router = useRouter()
-const isSubmitting = ref(false)
 
 const form = ref({
   title: '',
   description: '',
-  severity: '',
-  classification: '',
-  status: 'open',
-  tags: ''
+  severity: 'Medium'
 })
+
+const isSubmitting = ref(false)
 
 const handleSubmit = async () => {
   isSubmitting.value = true
@@ -145,7 +108,7 @@ const handleSubmit = async () => {
     await new Promise(resolve => setTimeout(resolve, 1000))
     
     // Redirect to incidents list
-    router.push('/incidents')
+    router.push('/dashboard/incidents')
   } catch (error) {
     console.error('Error creating incident:', error)
   } finally {
