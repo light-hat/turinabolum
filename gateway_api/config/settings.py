@@ -264,7 +264,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -272,7 +272,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # MinIO/S3 Configuration
-USE_S3 = False
+USE_S3 = True
 
 if USE_S3:
     # AWS S3/MinIO settings
@@ -287,7 +287,7 @@ if USE_S3:
 
     # File storage settings
     DEFAULT_FILE_STORAGE = "core.storage.MediaMinIOStorage"
-    STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
+    #STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
 
     # Media files settings
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
