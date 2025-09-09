@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  html {
+    color-scheme: light;
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Times New Roman', Times, serif;
+  }
+  .dark {
+    color-scheme: dark;
+  }
+}
+
+@layer utilities {
+  .w-sidebar {
+    width: var(--sidebar-width);
+  }
+  .w-sidebar-icon {
+    width: var(--sidebar-width-icon);
+  }
+  .h-sidebar {
+    height: var(--sidebar-height);
+  }
+}
