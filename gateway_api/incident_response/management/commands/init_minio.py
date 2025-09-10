@@ -22,13 +22,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         bucket_name = options["bucket_name"]
 
-        if not settings.USE_S3:
-            self.stdout.write(
-                self.style.WARNING(
-                    "S3 storage is disabled. Skipping MinIO initialization."
-                )
-            )
-            return
+        # if not settings.USE_S3:
+        #     self.stdout.write(
+        #         self.style.WARNING(
+        #             "S3 storage is disabled. Skipping MinIO initialization."
+        #         )
+        #     )
+        #     return
 
         try:
             # Create S3 client
