@@ -1,4 +1,4 @@
-from rest import views
+from incident_response import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
