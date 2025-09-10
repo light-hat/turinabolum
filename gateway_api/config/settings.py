@@ -72,7 +72,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "djoser",
-    "graphene_django",
+    #"graphene_django",
     "drf_spectacular",
     "django_filters",
     "corsheaders",
@@ -285,7 +285,7 @@ if USE_S3:
     AWS_S3_FILE_OVERWRITE = False
 
     # File storage settings
-    DEFAULT_FILE_STORAGE = "core.storage.MediaMinIOStorage"
+    #DEFAULT_FILE_STORAGE = "core.storage.MediaMinIOStorage"
     # STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
 
     # Media files settings
