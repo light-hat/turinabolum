@@ -62,4 +62,3 @@ class MediaMinIOStorage(MinIOStorage):
 
     location = "media"
     default_acl = "private"
-

@@ -261,8 +261,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_URL = "/static/"
+STATIC_DIR = os.path.join(BASE_DIR, "static")
 STATIC_ROOT = STATIC_DIR
 
 # Default primary key field type
@@ -286,7 +286,7 @@ if USE_S3:
 
     # File storage settings
     DEFAULT_FILE_STORAGE = "core.storage.MediaMinIOStorage"
-    #STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
+    # STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
 
     # Media files settings
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"

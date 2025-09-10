@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+
 
 class Case(models.Model):
     """
@@ -50,7 +51,7 @@ class Case(models.Model):
         max_length=50,
         verbose_name="Статус",
         help_text="Текущий статус расследования",
-        choices=CASE_STATUS_CHOICES
+        choices=CASE_STATUS_CHOICES,
     )
     severity = models.CharField(
         max_length=20,
@@ -69,7 +70,7 @@ class Case(models.Model):
         default="WHITE",
         verbose_name="TLP",
         help_text="Уровень конфиденциальности информации об инциденте",
-        choices=TLP_CHOICES
+        choices=TLP_CHOICES,
     )
     created_date = models.DateTimeField(
         auto_now_add=True,
