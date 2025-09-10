@@ -32,11 +32,11 @@
           >
             <SidebarMenuItem>
               <CollapsibleTrigger as-child v-if="item.items.length">
-                <SidebarMenuButton class="h-10 px-3 font-medium text-sm hover:bg-sidebar-accent/50 transition-colors font-serif">
+                <SidebarMenuButton class="h-10 px-3 font-medium text-sm hover:bg-sidebar-accent/50 transition-colors ">
                   {{ item.title }}
                 </SidebarMenuButton>
               </CollapsibleTrigger>
-              <SidebarMenuButton v-else as-child class="h-10 px-3 font-medium text-sm hover:bg-sidebar-accent/50 transition-colors font-serif">
+              <SidebarMenuButton v-else as-child class="h-10 px-3 font-medium text-sm hover:bg-sidebar-accent/50 transition-colors ">
                 <router-link :to="item.url" class="block w-full">{{ item.title }}</router-link>
               </SidebarMenuButton>
               <CollapsibleContent v-if="item.items.length" class="overflow-hidden transition-all duration-200">
@@ -45,7 +45,7 @@
                     <SidebarMenuSubButton
                       as-child
                       :is-active="childItem.isActive || false"
-                      class="h-9 px-3 text-sm hover:bg-sidebar-accent/50 transition-colors font-serif"
+                      class="h-9 px-3 text-sm hover:bg-sidebar-accent/50 transition-colors "
                     >
                       <router-link :to="childItem.url" class="block w-full">{{ childItem.title }}</router-link>
                     </SidebarMenuSubButton>

@@ -3,11 +3,11 @@
       <!-- Header -->
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100 font-serif">Dashboard</h1>
-          <p class="text-slate-600 dark:text-slate-400 font-serif">Welcome to Turinabolum Digital Forensics Platform</p>
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100 ">Dashboard</h1>
+          <p class="text-slate-600 dark:text-slate-400 ">Welcome to Turinabolum Digital Forensics Platform</p>
         </div>
         <div class="flex items-center gap-2">
-          <Button @click="refreshData" :disabled="isLoading" class="font-serif bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-0 shadow-lg">
+          <Button @click="refreshData" :disabled="isLoading" class=" bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-0 shadow-lg">
             <svg v-if="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -22,60 +22,60 @@
         <Card class="p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-0 shadow-xl">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 font-serif">Total Incidents</p>
-              <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 font-serif">{{ stats.totalIncidents }}</p>
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 ">Total Incidents</p>
+              <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 ">{{ stats.totalIncidents }}</p>
             </div>
             <div class="h-12 w-12 rounded-lg bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
               <AlertTriangleIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
             </div>
           </div>
           <div class="mt-4 flex items-center text-sm text-slate-600 dark:text-slate-400">
-            <span class="font-serif">{{ stats.newIncidentsThisWeek }} new this week</span>
+            <span class="">{{ stats.newIncidentsThisWeek }} new this week</span>
           </div>
         </Card>
 
         <Card class="p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-0 shadow-xl">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 font-serif">Active Cases</p>
-              <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 font-serif">{{ stats.activeCases }}</p>
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 ">Active Cases</p>
+              <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 ">{{ stats.activeCases }}</p>
             </div>
             <div class="h-12 w-12 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
               <ShieldIcon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
           <div class="mt-4 flex items-center text-sm text-slate-600 dark:text-slate-400">
-            <span class="font-serif">{{ stats.casesInProgress }} in progress</span>
+            <span class="">{{ stats.casesInProgress }} in progress</span>
           </div>
         </Card>
 
         <Card class="p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-0 shadow-xl">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 font-serif">Total Dumps</p>
-              <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 font-serif">{{ stats.totalDumps }}</p>
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 ">Total Dumps</p>
+              <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 ">{{ stats.totalDumps }}</p>
             </div>
             <div class="h-12 w-12 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
               <UploadIcon class="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
           </div>
           <div class="mt-4 flex items-center text-sm text-slate-600 dark:text-slate-400">
-            <span class="font-serif">{{ formatBytes(stats.totalDumpSize) }} total size</span>
+            <span class="">{{ formatBytes(stats.totalDumpSize) }} total size</span>
           </div>
         </Card>
 
         <Card class="p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-0 shadow-xl">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 font-serif">IOCs</p>
-              <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 font-serif">{{ stats.totalIOCs }}</p>
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400 ">IOCs</p>
+              <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 ">{{ stats.totalIOCs }}</p>
             </div>
             <div class="h-12 w-12 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
               <NetworkIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
             </div>
           </div>
           <div class="mt-4 flex items-center text-sm text-slate-600 dark:text-slate-400">
-            <span class="font-serif">{{ stats.newIOCsToday }} new today</span>
+            <span class="">{{ stats.newIOCsToday }} new today</span>
           </div>
         </Card>
       </div>
@@ -84,8 +84,8 @@
       <div class="grid gap-6 lg:grid-cols-2">
         <Card class="p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-0 shadow-xl">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 font-serif">Recent Incidents</h3>
-            <Button variant="outline" size="sm" class="font-serif bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border-0 shadow-lg">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 ">Recent Incidents</h3>
+            <Button variant="outline" size="sm" class=" bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border-0 shadow-lg">
               View All
             </Button>
           </div>
@@ -93,9 +93,9 @@
             <div v-for="incident in recentIncidents" :key="incident.id" class="flex items-start space-x-3 p-3 rounded-lg hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors backdrop-blur-sm">
               <div class="h-2 w-2 rounded-full bg-red-500 mt-2"></div>
               <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-slate-900 dark:text-slate-100 font-serif">{{ incident.title }}</p>
-                <p class="text-sm text-slate-600 dark:text-slate-400 font-serif">{{ incident.description }}</p>
-                <p class="text-xs text-slate-500 dark:text-slate-500 font-serif">{{ formatDate(incident.created_at) }}</p>
+                <p class="text-sm font-medium text-slate-900 dark:text-slate-100 ">{{ incident.title }}</p>
+                <p class="text-sm text-slate-600 dark:text-slate-400 ">{{ incident.description }}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-500 ">{{ formatDate(incident.created_at) }}</p>
               </div>
             </div>
           </div>
@@ -103,18 +103,18 @@
 
         <Card class="p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-0 shadow-xl">
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 font-serif">Quick Actions</h3>
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 ">Quick Actions</h3>
           </div>
           <div class="space-y-3">
-            <Button class="w-full justify-start font-serif bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border-0 shadow-lg hover:bg-white/70 dark:hover:bg-slate-600/70" variant="outline">
+            <Button class="w-full justify-start  bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border-0 shadow-lg hover:bg-white/70 dark:hover:bg-slate-600/70" variant="outline">
               <PlusIcon class="mr-2 h-4 w-4" />
               Create New Incident
             </Button>
-            <Button class="w-full justify-start font-serif bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border-0 shadow-lg hover:bg-white/70 dark:hover:bg-slate-600/70" variant="outline">
+            <Button class="w-full justify-start  bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border-0 shadow-lg hover:bg-white/70 dark:hover:bg-slate-600/70" variant="outline">
               <UploadIcon class="mr-2 h-4 w-4" />
               Upload Dump File
             </Button>
-            <Button class="w-full justify-start font-serif bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border-0 shadow-lg hover:bg-white/70 dark:hover:bg-slate-600/70" variant="outline">
+            <Button class="w-full justify-start  bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border-0 shadow-lg hover:bg-white/70 dark:hover:bg-slate-600/70" variant="outline">
               <FileTextIcon class="mr-2 h-4 w-4" />
               Generate Report
             </Button>
