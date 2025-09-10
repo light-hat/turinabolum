@@ -2,7 +2,7 @@
     <div class="min-h-screen flex items-center justify-center">
         <Card class="w-full max-w-sm">
             <CardHeader>
-                <CardTitle class="text-3xl text-center" style="letter-spacing: 0.5em;">
+                <CardTitle class="text-2xl text-center" style="letter-spacing: 0.5em;">
                     TURINΛBOLUM
                 </CardTitle>
                 <CardDescription class="text-center">
