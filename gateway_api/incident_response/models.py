@@ -1,6 +1,7 @@
 import hashlib
 import os
-from django.core.files.storage import default_storage
+#from django.core.files.storage import default_storage
+from config.storages import MediaMinIOStorage
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -138,8 +139,8 @@ class EvidenceUpload(models.Model):
         help_text="Оригинальное имя загруженного файла",
     )
     dump_file = models.FileField(
-        storage=default_storage,
-        upload_to="dumps/%Y/%m/%d/",
+        storage=MediaMinIOStorage(),
+        #upload_to="dumps/%Y/%m/%d/",
         verbose_name="Файл дампа",
         help_text="Файл дампа, загруженный в систему хранения",
     )
