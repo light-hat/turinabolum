@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 @extend_schema(
+    auth=[],
     operation_id="jwt_create",
     summary="Create JWT Token",
     description="Authenticate user and create JWT access and refresh tokens. The refresh token is set as an HttpOnly cookie.",
