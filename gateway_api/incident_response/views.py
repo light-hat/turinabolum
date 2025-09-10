@@ -15,7 +15,7 @@ class CaseViewSet(viewsets.ModelViewSet):
         filters.SearchFilter,
         filters.OrderingFilter,
     ]
-    filterset_fields = ["status", "incident"]
+    filterset_fields = ["status", "tlp"]
     search_fields = ["title", "description"]
     ordering_fields = ["created_date", "modified_date"]
     ordering = ["-created_date"]
