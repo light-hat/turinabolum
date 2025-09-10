@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 px-4">
+    <div class="min-h-screen flex items-center justify-center">
         <Card class="w-full max-w-sm">
             <CardHeader>
                 <CardTitle class="text-2xl">
