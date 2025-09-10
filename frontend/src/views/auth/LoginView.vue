@@ -6,7 +6,7 @@
                     TURINΛBOLUM
                 </CardTitle>
                 <CardDescription class="text-center">
-                    Sign in to your account to continue
+                    
                 </CardDescription>
             </CardHeader>
             <CardContent class="grid gap-4">
