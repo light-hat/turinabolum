@@ -24,12 +24,11 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from gql.views import graphql_view
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", include("auth_api.urls")),
-    path("api/v1/", include("rest.urls")),
+    path("api/v1/", include("incident_response.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",
@@ -37,7 +36,6 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
-    path("graphql/", graphql_view, name="graphql"),
 ]
 
 if settings.DEBUG:
