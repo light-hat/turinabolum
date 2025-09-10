@@ -2,11 +2,11 @@
     <div class="min-h-screen flex items-center justify-center">
         <Card class="w-full max-w-sm">
             <CardHeader>
-                <CardTitle class="text-2xl text-center">
-                    T U R I N Λ B O L U M
+                <CardTitle class="text-3xl text-center" style="letter-spacing: 2px;">
+                    TURINΛBOLUM
                 </CardTitle>
-                <CardDescription>
-                    Enter your email below to login to your account.
+                <CardDescription class="text-center">
+                    Sign in to your account to continue
                 </CardDescription>
             </CardHeader>
             <CardContent class="grid gap-4">
