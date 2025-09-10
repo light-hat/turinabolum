@@ -19,6 +19,44 @@
                     <Input id="password" type="password" required />
                 </div>
             </CardContent>
+
+
+            <CardContent class="grid gap-4">
+                <form @submit.prevent="handleLogin" class="grid gap-4">
+                <div class="grid gap-2">
+                    <Label for="username">Username</Label>
+                    <Input 
+                    id="username" 
+                    v-model="form.username"
+                    type="text" 
+                    placeholder="Enter your username" 
+                    autocomplete="username"
+                    required 
+                    :disabled="authStore.isLoading"
+                    class="h-11 "
+                    />
+                </div>
+                <div class="grid gap-2">
+                    <Label for="password">Password</Label>
+                    <Input 
+                    id="password" 
+                    v-model="form.password"
+                    type="password" 
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required 
+                    :disabled="authStore.isLoading"
+                    class="h-11 "
+                    />
+                </div>
+
+                <div v-if="authStore.error" class="p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md ">
+                {{ authStore.error }}
+                </div>
+                </form>
+            </CardContent>
+
+
             <CardFooter>
                 <Button 
                 class="w-full"
