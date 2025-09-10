@@ -19,11 +19,3 @@ class CaseSerializer(serializers.ModelSerializer):
             "created_by",
         ]
         read_only_fields = ["id", "created_date", "modified_date"]
-
-    def validate_incident(self, value):
-        """Проверка, что инцидент существует и не закрыт"""
-        if value.status == "Closed":
-            raise serializers.ValidationError(
-                "Нельзя создать расследование для закрытого инцидента"
-            )
-        return value

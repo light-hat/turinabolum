@@ -285,7 +285,7 @@ if USE_S3:
     AWS_S3_FILE_OVERWRITE = False
 
     # File storage settings
-    #DEFAULT_FILE_STORAGE = "core.storage.MediaMinIOStorage"
+    DEFAULT_FILE_STORAGE = "config.storage.MediaMinIOStorage"
     # STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
 
     # Media files settings
