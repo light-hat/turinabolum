@@ -7,13 +7,13 @@
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="#" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors font-serif">
+                <BreadcrumbLink href="#" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors ">
                   Turinabolum Platform
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator class="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage class="text-sm font-semibold font-serif">{{ pageTitle }}</BreadcrumbPage>
+                <BreadcrumbPage class="text-sm font-semibold ">{{ pageTitle }}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

@@ -72,16 +72,14 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "djoser",
-    "graphene_django",
+    #"graphene_django",
     "drf_spectacular",
     "django_filters",
     "corsheaders",
     "storages",
-    "core",
     "auth_api",
-    "rest",
-    "gql",
-    "workers",
+    "incident_response",
+    "dump_analysis",
 ]
 
 MIDDLEWARE = [
@@ -263,8 +261,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_URL = "/static/"
+STATIC_DIR = os.path.join(BASE_DIR, "static")
 STATIC_ROOT = STATIC_DIR
 
 # Default primary key field type
@@ -272,31 +270,26 @@ STATIC_ROOT = STATIC_DIR
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# MinIO/S3 Configuration
-USE_S3 = True
+# AWS S3/MinIO settings
+AWS_ACCESS_KEY_ID = environ.get("MINIO_ACCESS_KEY", "minioadmin")
+AWS_SECRET_ACCESS_KEY = environ.get("MINIO_SECRET_KEY", "minioadmin")
+AWS_STORAGE_BUCKET_NAME = environ.get("MINIO_BUCKET_NAME", "mybucket")
+AWS_S3_ENDPOINT_URL = environ.get("MINIO_ENDPOINT_URL", "http://minio:9000")
+AWS_S3_CUSTOM_DOMAIN = None
+AWS_DEFAULT_ACL = None
+AWS_S3_VERIFY = False
+AWS_S3_FILE_OVERWRITE = False
 
-if USE_S3:
-    # AWS S3/MinIO settings
-    AWS_ACCESS_KEY_ID = environ.get("MINIO_ACCESS_KEY", "minioadmin")
-    AWS_SECRET_ACCESS_KEY = environ.get("MINIO_SECRET_KEY", "minioadmin")
-    AWS_STORAGE_BUCKET_NAME = environ.get("MINIO_BUCKET_NAME", "mybucket")
-    AWS_S3_ENDPOINT_URL = environ.get("MINIO_ENDPOINT_URL", "http://minio:9000")
-    AWS_S3_CUSTOM_DOMAIN = None
-    AWS_DEFAULT_ACL = None
-    AWS_S3_VERIFY = False
-    AWS_S3_FILE_OVERWRITE = False
+# File storage settings
+DEFAULT_FILE_STORAGE = "config.storage.MediaMinIOStorage"
+# STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
 
-    # File storage settings
-    DEFAULT_FILE_STORAGE = "core.storage.MediaMinIOStorage"
-    #STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
+# Media files settings
+MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
+MEDIA_ROOT = ""
+MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True # Optional: create bucket if it doesn't exist
+MINIO_STORAGE_AUTO_CREATE_MEDIA_POLICY = True # Optional: set public policy for media bucket
 
-    # Media files settings
-    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
-    MEDIA_ROOT = ""
-else:
-    # Local file storage (fallback)
-    MEDIA_URL = "/media/"
-    MEDIA_ROOT = BASE_DIR / "media"
 
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "redis://redis:6379"
