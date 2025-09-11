@@ -20,50 +20,50 @@ const router = createRouter({
       component: () => import('@/views/auth/RegisterView.vue'),
       meta: { requiresGuest: true }
     },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('@/components/layout/DashboardLayout.vue'),
-      meta: { requiresAuth: true },
-      children: [
-        {
-          path: '',
-          name: 'dashboard-home',
-          component: () => import('@/views/dashboard/DashboardView.vue')
-        },
-        {
-          path: 'incidents',
-          name: 'incidents',
-          component: () => import('@/views/incidents/IncidentsView.vue')
-        },
-        {
-          path: 'incidents/new',
-          name: 'new-incident',
-          component: () => import('@/views/incidents/NewIncidentView.vue')
-        },
-        {
-          path: 'incidents/:id',
-          name: 'incident-details',
-          component: () => import('@/views/incidents/IncidentDetailsView.vue'),
-          props: true
-        },
-        {
-          path: 'dumps',
-          name: 'dumps',
-          component: () => import('@/views/dumps/DumpsView.vue')
-        },
-        {
-          path: 'graph',
-          name: 'graph',
-          component: () => import('@/views/graph/GraphView.vue')
-        },
-        {
-          path: 'profile',
-          name: 'profile',
-          component: () => import('@/views/ProfileView.vue')
-        }
-      ]
-    }
+    // {
+    //   path: '/dashboard',
+    //   name: 'dashboard',
+    //   component: () => import('@/components/layout/DashboardLayout.vue'),
+    //   meta: { requiresAuth: true },
+    //   children: [
+    //     {
+    //       path: '',
+    //       name: 'dashboard-home',
+    //       component: () => import('@/views/dashboard/DashboardView.vue')
+    //     },
+    //     {
+    //       path: 'incidents',
+    //       name: 'incidents',
+    //       component: () => import('@/views/incidents/IncidentsView.vue')
+    //     },
+    //     {
+    //       path: 'incidents/new',
+    //       name: 'new-incident',
+    //       component: () => import('@/views/incidents/NewIncidentView.vue')
+    //     },
+    //     {
+    //       path: 'incidents/:id',
+    //       name: 'incident-details',
+    //       component: () => import('@/views/incidents/IncidentDetailsView.vue'),
+    //       props: true
+    //     },
+    //     {
+    //       path: 'dumps',
+    //       name: 'dumps',
+    //       component: () => import('@/views/dumps/DumpsView.vue')
+    //     },
+    //     {
+    //       path: 'graph',
+    //       name: 'graph',
+    //       component: () => import('@/views/graph/GraphView.vue')
+    //     },
+    //     {
+    //       path: 'profile',
+    //       name: 'profile',
+    //       component: () => import('@/views/ProfileView.vue')
+    //     }
+    //   ]
+    // }
   ]
 })
 
