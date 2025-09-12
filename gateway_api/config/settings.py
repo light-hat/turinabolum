@@ -275,26 +275,41 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # MinIO/S3 Configuration
 USE_S3 = True
 
+# AWS S3/MinIO settings
+AWS_ACCESS_KEY_ID = environ.get("MINIO_ACCESS_KEY", "minioadmin")
+AWS_SECRET_ACCESS_KEY = environ.get("MINIO_SECRET_KEY", "minioadmin")
+AWS_STORAGE_BUCKET_NAME = environ.get("MINIO_BUCKET_NAME", "mybucket")
+AWS_S3_ENDPOINT_URL = environ.get("MINIO_ENDPOINT_URL", "http://minio:9000")
+AWS_S3_CUSTOM_DOMAIN = None
+AWS_DEFAULT_ACL = None
+AWS_S3_VERIFY = False
+AWS_S3_FILE_OVERWRITE = False
+
+# File storage settings - Django 5.2+ format
+# Define STORAGES unconditionally first
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {"location": str(BASE_DIR / "media")},
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+# Override based on USE_S3 setting
 if USE_S3:
-    # AWS S3/MinIO settings
-    AWS_ACCESS_KEY_ID = environ.get("MINIO_ACCESS_KEY", "minioadmin")
-    AWS_SECRET_ACCESS_KEY = environ.get("MINIO_SECRET_KEY", "minioadmin")
-    AWS_STORAGE_BUCKET_NAME = environ.get("MINIO_BUCKET_NAME", "mybucket")
-    AWS_S3_ENDPOINT_URL = environ.get("MINIO_ENDPOINT_URL", "http://minio:9000")
-    AWS_S3_CUSTOM_DOMAIN = None
-    AWS_DEFAULT_ACL = None
-    AWS_S3_VERIFY = False
-    AWS_S3_FILE_OVERWRITE = False
-
-    # File storage settings
     DEFAULT_FILE_STORAGE = "core.storage.MediaMinIOStorage"
-    #STATICFILES_STORAGE = "core.storage.StaticMinIOStorage"
-
+    STORAGES["default"] = {
+        "BACKEND": "core.storage.MediaMinIOStorage",
+        "OPTIONS": {},
+    }
     # Media files settings
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
     MEDIA_ROOT = ""
 else:
-    # Local file storage (fallback)
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    # Media files settings
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
 

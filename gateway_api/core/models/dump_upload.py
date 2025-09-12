@@ -1,9 +1,7 @@
 import hashlib
-import os
 from django.contrib.auth.models import User
-from django.core.files.storage import default_storage
 from django.db import models
-from django.core.files.storage import default_storage
+from core.storage import MediaMinIOStorage
 
 
 class DumpUpload(models.Model):
@@ -39,6 +37,7 @@ class DumpUpload(models.Model):
     )
     dump_file = models.FileField(
         upload_to="dumps/%Y/%m/%d/",
+        storage=MediaMinIOStorage(),  # ✅ explicitly use MinIO
         verbose_name="Файл дампа",
         help_text="Файл дампа, загруженный в систему хранения",
     )
@@ -101,22 +100,17 @@ class DumpUpload(models.Model):
         return f"{self.dump_type} Dump: {self.original_filename}"
 
     def calculate_file_hashes(self):
-        """
-        Calculate MD5, SHA1, and SHA256 hashes for the uploaded file.
-        This method should be called after file upload.
-        """
+        """Calculate MD5, SHA1, and SHA256 hashes for the uploaded file."""
         if not self.dump_file:
             return
 
         try:
-            # Read file in chunks to handle large files efficiently
-            file_obj = default_storage.open(self.dump_file.name, "rb")
+            file_obj = self.dump_file.open("rb")
 
             md5_hash = hashlib.md5()
             sha1_hash = hashlib.sha1()
             sha256_hash = hashlib.sha256()
 
-            # Read file in 8KB chunks
             for chunk in iter(lambda: file_obj.read(8192), b""):
                 md5_hash.update(chunk)
                 sha1_hash.update(chunk)
@@ -124,58 +118,39 @@ class DumpUpload(models.Model):
 
             file_obj.close()
 
-            # Update model fields
             self.md5_hash = md5_hash.hexdigest()
             self.sha1_hash = sha1_hash.hexdigest()
             self.sha256_hash = sha256_hash.hexdigest()
+            self.file_size = self.dump_file.size
 
-            # Calculate file size
-            self.file_size = default_storage.size(self.dump_file.name)
-
-            # Save without triggering signals
             self.save(
                 update_fields=["md5_hash", "sha1_hash", "sha256_hash", "file_size"]
             )
 
         except Exception as e:
-            # Log error but don't fail the upload
             import logging
 
             logger = logging.getLogger(__name__)
-            logger.error(
-                f"Failed to calculate hashes for {self.original_filename}: {e}"
-            )
+            logger.error(f"Failed to calculate hashes for {self.original_filename}: {e}")
 
     def get_file_url(self):
-        """
-        Get the URL for accessing the uploaded file.
-        """
-        if self.dump_file:
-            return default_storage.url(self.dump_file.name)
-        return None
+        """Return the URL for accessing the uploaded file."""
+        return self.dump_file.url if self.dump_file else None
 
     def delete_file(self):
-        """
-        Delete the physical file from storage.
-        """
-        if self.dump_file and default_storage.exists(self.dump_file.name):
-            default_storage.delete(self.dump_file.name)
+        """Delete the physical file from storage."""
+        if self.dump_file and self.dump_file.storage.exists(self.dump_file.name):
+            self.dump_file.storage.delete(self.dump_file.name)
 
     def save(self, *args, **kwargs):
-        """
-        Override save to handle file operations.
-        """
-        # If this is a new instance and has a file, calculate hashes
+        """Override save to calculate hashes on new files."""
         if not self.pk and self.dump_file:
             super().save(*args, **kwargs)
-            # Calculate hashes after saving (so we have a pk)
             self.calculate_file_hashes()
         else:
             super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        """
-        Override delete to remove the physical file.
-        """
+        """Override delete to remove the physical file."""
         self.delete_file()
         super().delete(*args, **kwargs)
