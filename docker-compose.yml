@@ -57,7 +57,6 @@ services:
       retries: 20
 
   kibana:
-    restart: always
     image: opensearchproject/opensearch-dashboards:2.19.1
     environment:
       OPENSEARCH_HOSTS: '["https://os01:9200"]'
