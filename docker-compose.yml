@@ -51,7 +51,7 @@ services:
     networks:
       - turinabol_net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      test: ["CMD", "curl", "-k", "http://localhost:9200"]
       interval: 10s
       timeout: 10s
       retries: 20

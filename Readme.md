@@ -20,9 +20,10 @@ In progress. This is going to be awesome.
 ```bash
 sudo sysctl -w vm.max_map_count=512000
 cd opensearch
+rm -rf certs/
 chmod +x generate-certs.sh
 ./generate-certs.sh
 cd ..
 chown -R 1000:1000 opensearch
-sudo docker compose up -d --build
+sudo docker compose up --build
 ```
