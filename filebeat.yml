@@ -1,0 +1,31 @@
+filebeat.inputs:
+- type: filestream
+  enabled: true
+  paths:
+    - /app/logs/disk/*.log
+  fields:
+    service_name: "disk-dump"
+  fields_under_root: true
+# - type: filestream
+#   enabled: true
+#   paths:
+#     - /app/logs/network/*.log 
+#   fields:
+#     service_name: "network-dump"
+#   fields_under_root: true
+
+output.elasticsearch:
+  hosts: ["http://os01:9200"]
+  indices:
+    - index: "logs-disk-dump-%{+yyyy.MM.dd}"
+      when.equals: 
+        fields.service_name: "disk-dump"
+    - index: "logs-network-dump-%{+yyyy.MM.dd}"
+      when.equals:
+        fields.service_name: "network-dump"
+        
+  index: "logs-unknown-%{+yyyy.MM.dd}"
+
+setup.ilm.enabled: false
+setup.template.name: "my-logs-template"
+setup.template.pattern: "logs-*"

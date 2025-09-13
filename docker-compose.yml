@@ -16,32 +16,6 @@ services:
     networks:
       - turinabol_net
 
-  db:
-    image: postgres:17-alpine
-    container_name: postgresql
-    expose:
-      - "5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-      POSTGRES_DB: "postgres"
-    restart: always
-    networks:
-      - turinabol_net
-
-  redis:
-    image: redis:7.0.15
-    container_name: redis
-    expose:
-      - 6379
-    volumes:
-      - redis_data:/data
-    restart: always
-    networks:
-      - turinabol_net
-
   os01:
     image: opensearchproject/opensearch:2.19.1
     environment:
@@ -73,6 +47,103 @@ services:
     expose:
       - 9200
       - 9600
+    restart: always
+    networks:
+      - turinabol_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+
+  kibana:
+    restart: always
+    image: opensearchproject/opensearch-dashboards:2.19.1
+    environment:
+      OPENSEARCH_HOSTS: '["https://os01:9200"]'
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    volumes:
+      - "./opensearch/certs:/usr/share/opensearch-dashboards/config/certificates:ro"
+      - "./opensearch/opensearch-dashboards.yml:/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml"
+    ports:
+      - 5601:5601
+    depends_on:
+      os01:
+        condition: service_healthy
+    restart: always
+    networks:
+      - turinabol_net
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.13.0
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./logs/disk:/app/logs/disk:ro
+      #- ./logs/network:/app/logs/network:ro
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - filebeat-data:/usr/share/filebeat/data
+    command: filebeat -e --strict.perms=false
+    depends_on:
+      os01:
+        condition: service_healthy
+    restart: always
+    networks:
+      - turinabol_net
+
+  disk_dump_service:
+  # Test
+  # curl -XPOST http://87.228.88.155:8001/process --json '{"dump_id": "550e8400-e29b-41d4-a716-446655440000", "s3_url": "http://minio/"}'
+  # curl -XGET http://87.228.88.155:8001/status/8a78b0e7-dbe4-4d6a-9f44-53695877891f
+    build:
+      context: disk_dump_service
+      dockerfile: Dockerfile
+    image: turinabolum_disk_dump_service:latest
+    ports:
+      - 8001:8001
+    environment:
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_SECURE=False
+      # - OPENSEARCH_HOST=os01:9200
+      # - OPENSEARCH_INDEX_PREFIX=disk_dump
+      - MAX_WORKERS=4
+      - TEMP_DIR=/tmp
+    depends_on:
+      - minio
+    restart: always
+    scale: 1
+    networks:
+      - turinabol_net
+
+  db:
+    image: postgres:17-alpine
+    container_name: postgresql
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+    restart: always
+    networks:
+      - turinabol_net
+
+  redis:
+    image: redis:7.0.15
+    container_name: redis
+    expose:
+      - 6379
+    volumes:
+      - redis_data:/data
     restart: always
     networks:
       - turinabol_net
@@ -127,82 +198,40 @@ services:
   #   networks:
   #     - turinabol_net
 
-  kibana:
-    restart: always
-    image: opensearchproject/opensearch-dashboards:2.19.1
-    environment:
-      OPENSEARCH_HOSTS: '["https://os01:9200"]'
-      DISABLE_INSTALL_DEMO_CONFIG: "true"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "1"
-    volumes:
-      - "./opensearch/certs:/usr/share/opensearch-dashboards/config/certificates:ro"
-      - "./opensearch/opensearch-dashboards.yml:/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml"
-    ports:
-      - 5601:5601
-
-  worker:
-    build:
-      context: gateway_api
-      dockerfile: Dockerfile
-    image: turinabolum:latest
-    environment:
-      - MINIO_ACCESS_KEY=minioadmin
-      - MINIO_SECRET_KEY=minioadmin
-      - MINIO_BUCKET_NAME=mybucket
-      - MINIO_ENDPOINT_URL=http://minio:9000
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DJANGO_ENV=settings
-      - API_HOST=127.0.0.1
-      - API_PORT=80
-      - OPENSEARCH_HOST=os01
-      - OPENSEARCH_PORT=9200
-      - OPENSEARCH_USER=admin
-      - OPENSEARCH_PASSWORD=admin
-    depends_on:
-      - gateway
-    entrypoint: celery -A config worker --loglevel=info
-    restart: always
-    scale: 3
-
-  disk_dump_service:
-  # Test
-  # curl -XPOST http://87.228.88.155:8001/process --json '{"dump_id": "550e8400-e29b-41d4-a716-446655440000", "s3_url": "http://minio/"}'
-  # curl -XGET http://87.228.88.155:8001/status/8a78b0e7-dbe4-4d6a-9f44-53695877891f
-    build:
-      context: disk_dump_service
-      dockerfile: Dockerfile
-    image: turinabolum_disk_dump_service:latest
-    ports:
-      - 8001:8001
-    environment:
-      - MINIO_ENDPOINT=http://minio:9000
-      - MINIO_ACCESS_KEY=minioadmin
-      - MINIO_SECRET_KEY=minioadmin
-      - MINIO_SECURE=False
-      - OPENSEARCH_HOST=os01:9200
-      - OPENSEARCH_INDEX_PREFIX=disk_dump
-      - MAX_WORKERS=4
-      - TEMP_DIR=/tmp
-    depends_on:
-      - minio
-    restart: always
-    scale: 1
-    networks:
-      - turinabol_net
+  # worker:
+  #   build:
+  #     context: gateway_api
+  #     dockerfile: Dockerfile
+  #   image: turinabolum:latest
+  #   environment:
+  #     - MINIO_ACCESS_KEY=minioadmin
+  #     - MINIO_SECRET_KEY=minioadmin
+  #     - MINIO_BUCKET_NAME=mybucket
+  #     - MINIO_ENDPOINT_URL=http://minio:9000
+  #     - POSTGRES_DB=postgres
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #     - DJANGO_ENV=settings
+  #     - API_HOST=127.0.0.1
+  #     - API_PORT=80
+  #     - OPENSEARCH_HOST=os01
+  #     - OPENSEARCH_PORT=9200
+  #     - OPENSEARCH_USER=admin
+  #     - OPENSEARCH_PASSWORD=admin
+  #   depends_on:
+  #     - gateway
+  #   entrypoint: celery -A config worker --loglevel=info
+  #   restart: always
+  #   scale: 3
 
 volumes:
   redis_data:
   postgres_data:
   minio-data:
   os-data1:
+  filebeat-data:
 
 networks:
   turinabol_net:
