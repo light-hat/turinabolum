@@ -166,7 +166,7 @@ services:
     ports:
       - 8001:8001
     environment:
-      - MINIO_ENDPOINT=localhost:9000
+      - MINIO_ENDPOINT=http://minio:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_SECURE=False
@@ -175,7 +175,7 @@ services:
       - MAX_WORKERS=4
       - TEMP_DIR=/tmp
     depends_on:
-      - os01
+      - minio
     restart: always
     scale: 1
     networks:

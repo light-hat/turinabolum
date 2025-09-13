@@ -18,16 +18,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     python3 \
     python3-pip \
-    python3-full \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    python3-full
+
+#RUN apt-get update && apt-get remove -y python3-urllib3 && apt-get autoremove -y
 
 RUN add-apt-repository universe -y \
     && add-apt-repository ppa:gift/stable -y \
     && apt update \
     && apt-get -y install plaso-tools
-
-RUN apt-get update && apt-get remove -y python3-urllib3 && apt-get autoremove -y
 
 WORKDIR /app
 

@@ -54,6 +54,7 @@ async def process_dump_task(task_id: UUID, dump_id: UUID, s3_url: str):
                 "none",
                 "--workers",
                 str(Config.MAX_WORKERS),
+                "--storage_file",
                 storage_file,
                 dump_path,
             ]
@@ -69,7 +70,7 @@ async def process_dump_task(task_id: UUID, dump_id: UUID, s3_url: str):
                 "opensearch",
                 "--server",
                 Config.OPENSEARCH_HOST,
-                "--index",
+                "--index-name",
                 f"{Config.OPENSEARCH_INDEX_PREFIX}-{dump_id}",
                 storage_file,
             ]
