@@ -29,7 +29,7 @@ jobs:
           script: |
             apt update
             apt -y install git make vim tmux
-        id: deploy
+        id: apt
       - name: Setup Docker
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -50,7 +50,7 @@ jobs:
             sudo apt-get update
 
             sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-        id: deploy
+        id: docker
       - name: Start Stack
         uses: appleboy/ssh-action@v1.0.0
         with:
