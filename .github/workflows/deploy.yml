@@ -83,13 +83,13 @@ jobs:
             echo ---------------------------------------------
             echo DOCKER CONTAINERS
             echo ---------------------------------------------
-            docker compose -f docker-compose/dev/docker-compose.yml ps
+            docker compose ps
 
             echo ---------------------------------------------
             echo LOGS
             echo ---------------------------------------------
 
-            docker compose -f docker-compose/dev/docker-compose.yml logs
+            docker compose logs
 
             echo "Deployed to dev environment"
         id: deploy

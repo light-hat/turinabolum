@@ -1,5 +1,6 @@
 filebeat.inputs:
 - type: filestream
+  id: disk
   enabled: true
   paths:
     - /app/logs/disk/*.log
@@ -7,6 +8,7 @@ filebeat.inputs:
     service_name: "disk-dump"
   fields_under_root: true
 # - type: filestream
+#   id: network
 #   enabled: true
 #   paths:
 #     - /app/logs/network/*.log 
@@ -16,6 +18,8 @@ filebeat.inputs:
 
 output.elasticsearch:
   hosts: ["https://os01:9200"]
+  username: "${OPENSEARCH_USERNAME}"
+  password: "${OPENSEARCH_PASSWORD}"
   indices:
     - index: "logs-disk-dump-%{+yyyy.MM.dd}"
       when.equals: 

@@ -87,6 +87,9 @@ services:
       - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - filebeat-data:/usr/share/filebeat/data
     command: filebeat -e --strict.perms=false
+    environment:
+      - OPENSEARCH_USERNAME=admin
+      - OPENSEARCH_PASSWORD=admin
     depends_on:
       - os01
     restart: always
