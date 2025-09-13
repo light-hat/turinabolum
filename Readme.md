@@ -16,3 +16,9 @@ In progress. This is going to be awesome.
 
 > [!TIP]
 > As a result, the service should build a timeline of events and display matches in TI feeds, forming an approximate course of the attack, thereby removing a lot of routine work from the investigator. 
+
+```bash
+sudo sysctl -w vm.max_map_count=512000
+chmod +x opensearch/generate-certs.sh && ./opensearch/generate-certs.sh
+sudo docker compose up -d --build
+```

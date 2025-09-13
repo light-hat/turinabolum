@@ -111,21 +111,38 @@ services:
     networks:
       - turinabol_net
 
-  frontend:
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-      args:
-        - VITE_API_BASE_URL=http://localhost:8000/api/v1
-    image: turinabolum-frontend:latest
-    container_name: turinabolum-frontend
-    ports:
-      - "3000:80"
-    depends_on:
-      - gateway
+  # frontend:
+  #   build:
+  #     context: frontend
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - VITE_API_BASE_URL=http://localhost:8000/api/v1
+  #   image: turinabolum-frontend:latest
+  #   container_name: turinabolum-frontend
+  #   ports:
+  #     - "3000:80"
+  #   depends_on:
+  #     - gateway
+  #   restart: always
+  #   networks:
+  #     - turinabol_net
+
+  kibana:
     restart: always
-    networks:
-      - turinabol_net
+    image: opensearchproject/opensearch-dashboards:2.19.1
+    environment:
+      OPENSEARCH_HOSTS: '["https://os01:9200"]'
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    volumes:
+      - "./opensearch/certs:/usr/share/opensearch-dashboards/config/certificates:ro"
+      - "./opensearch/opensearch-dashboards.yml:/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml"
+    ports:
+      - 5601:5601
 
   worker:
     build:
