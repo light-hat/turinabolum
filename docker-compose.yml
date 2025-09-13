@@ -78,22 +78,22 @@ services:
     networks:
       - turinabol_net
 
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:8.13.0
-    container_name: filebeat
-    user: root
-    volumes:
-      - ./logs/disk:/app/logs/disk:ro
-      #- ./logs/network:/app/logs/network:ro
-      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - filebeat-data:/usr/share/filebeat/data
-    command: filebeat -e --strict.perms=false
-    depends_on:
-      os01:
-        condition: service_healthy
-    restart: always
-    networks:
-      - turinabol_net
+  # filebeat:
+  #   image: docker.elastic.co/beats/filebeat:8.13.0
+  #   container_name: filebeat
+  #   user: root
+  #   volumes:
+  #     - ./logs/disk:/app/logs/disk:ro
+  #     #- ./logs/network:/app/logs/network:ro
+  #     - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+  #     - filebeat-data:/usr/share/filebeat/data
+  #   command: filebeat -e --strict.perms=false
+  #   depends_on:
+  #     os01:
+  #       condition: service_healthy
+  #   restart: always
+  #   networks:
+  #     - turinabol_net
 
   disk_dump_service:
   # Test
