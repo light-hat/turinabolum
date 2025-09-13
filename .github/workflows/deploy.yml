@@ -70,8 +70,15 @@ jobs:
               git pull origin ${{ github.ref_name }}
             fi
 
-            make docker
-            make dev DEV_HOSTNAME=${{ secrets.SERVER_IP }}
+            sudo sysctl -w vm.max_map_count=512000
+            cd opensearch
+            rm -rf certs/
+            chmod +x generate-certs.sh
+            ./generate-certs.sh
+            cd ..
+            chown -R 1000:1000 opensearch
+            sudo docker compose up -d --build
+            sudo docker compose exec os01 bash -c "chmod +x plugins/opensearch-security/tools/securityadmin.sh && bash plugins/opensearch-security/tools/securityadmin.sh -cd config/opensearch-security -icl -nhnv -cacert config/certificates/ca/ca.pem -cert config/certificates/ca/admin.pem -key config/certificates/ca/admin.key -h localhost"
 
             echo ---------------------------------------------
             echo DOCKER CONTAINERS
