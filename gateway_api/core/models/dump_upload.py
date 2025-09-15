@@ -31,13 +31,14 @@ class DumpUpload(models.Model):
         help_text="Тип загруженного дампа",
     )
     original_filename = models.CharField(
-        max_length=255,
+        max_length=500,
         verbose_name="Исходное имя файла",
         help_text="Оригинальное имя загруженного файла",
     )
     dump_file = models.FileField(
-        upload_to="dumps/%Y/%m/%d/",
-        storage=MediaMinIOStorage(),  # ✅ explicitly use MinIO
+        #upload_to="dumps/%Y/%m/%d/",
+        max_length=500
+        storage=MediaMinIOStorage(),
         verbose_name="Файл дампа",
         help_text="Файл дампа, загруженный в систему хранения",
     )
