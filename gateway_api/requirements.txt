@@ -2,7 +2,7 @@ amqp==5.3.1
 asgiref==3.9.1
 attrs==25.3.0
 billiard==4.2.1
-boto3==1.40.33
+boto3==1.40.34
 botocore==1.40.32
 celery==5.5.3
 certifi==2025.8.3
