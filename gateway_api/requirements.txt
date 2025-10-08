@@ -16,7 +16,7 @@ cryptography==46.0.2
 defusedxml==0.7.1
 Django==5.2.5
 django-cors-headers==4.9.0
-django-filter==25.1
+django-filter==25.2
 django-storages==1.14.6
 djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
