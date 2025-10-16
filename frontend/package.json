@@ -29,7 +29,7 @@
     "axios": "^1.12.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-vue-next": "^0.545.0",
+    "lucide-vue-next": "^0.546.0",
     "npm-run-all2": "^8.0.4",
     "pinia": "^3.0.3",
     "reka-ui": "^2.5.1",
