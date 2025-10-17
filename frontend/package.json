@@ -35,7 +35,7 @@
     "reka-ui": "^2.5.1",
     "tailwind-merge": "^3.3.1",
     "vue": "^3.5.22",
-    "vue-router": "^4.6.2"
+    "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",
