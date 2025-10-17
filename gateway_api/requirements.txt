@@ -3,7 +3,7 @@ asgiref==3.10.0
 attrs==25.4.0
 billiard==4.2.2
 boto3==1.40.53
-botocore==1.40.53
+botocore==1.40.54
 celery==5.5.3
 certifi==2025.10.5
 cffi==2.0.0
